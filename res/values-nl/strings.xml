@@ -1,5 +1,6 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <!--  Copyright (C) 2007 The Android Open Source Project
+      Copyright (C) 2012 The CyanogenMod Project
 
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
@@ -13,10 +14,9 @@
      See the License for the specific language governing permissions and
      limitations under the License.
  -->
-
 <resources xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-    <string name="app_name" msgid="8396461461738434341">"SIM-toolkit"</string>
+    <string name="app_name" msgid="8396461461738434341">"Simtoolkit"</string>
     <string name="menu_end_session" msgid="7368541737750982217">"Sessie beëindigen"</string>
     <string name="help" msgid="9209980881219397319">"Help"</string>
     <string name="menu_back" msgid="301227740977453364">"Terug"</string>
