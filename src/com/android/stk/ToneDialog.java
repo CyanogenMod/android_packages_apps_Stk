@@ -54,7 +54,7 @@ public class ToneDialog extends Activity {
         }
     };
 
-    Vibrator mVibrator = (Vibrator)getSystemService(VIBRATOR_SERVICE);
+    Vibrator mVibrator = null;
 
     // Message id to signal tone duration timeout.
     private static final int MSG_ID_STOP_TONE = 0xda;
@@ -81,6 +81,8 @@ public class ToneDialog extends Activity {
         } else {
             iv.setImageBitmap(toneMsg.icon);
         }
+
+        mVibrator = (Vibrator)getSystemService(VIBRATOR_SERVICE);
 
         // Start playing tone and vibration
         player = new TonePlayer();
