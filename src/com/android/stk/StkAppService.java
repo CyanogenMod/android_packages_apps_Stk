@@ -108,6 +108,7 @@ public class StkAppService extends Service implements Runnable {
     static final int OP_BOOT_COMPLETED = 5;
     private static final int OP_DELAYED_MSG = 6;
     static final int OP_CARD_STATUS_CHANGED = 7;
+    static final int OP_ALPHA_NOTIFY = 10;
 
     // Response ids
     static final int RES_ID_MENU_SELECTION = 11;
@@ -192,6 +193,7 @@ public class StkAppService extends Service implements Runnable {
             break;
         case OP_RESPONSE:
         case OP_CARD_STATUS_CHANGED:
+        case OP_ALPHA_NOTIFY:
             msg.obj = args;
             /* falls through */
         case OP_LAUNCH_APP:
@@ -353,6 +355,9 @@ public class StkAppService extends Service implements Runnable {
             case OP_CARD_STATUS_CHANGED:
                 CatLog.d(this, "Card/Icc Status change received");
                 handleCardStatusChangeAndIccRefresh((Bundle) msg.obj);
+                break;
+            case OP_ALPHA_NOTIFY:
+                handleAlphaNotify((Bundle) msg.obj);
                 break;
             }
         }
@@ -1015,5 +1020,14 @@ public class StkAppService extends Service implements Runnable {
             return true;
         }
         return false;
+    }
+
+    private void handleAlphaNotify(Bundle args) {
+        String alphaString = args.getString(AppInterface.ALPHA_STRING);
+
+        CatLog.d(this, "Alpha string received from card: " + alphaString);
+        Toast toast = Toast.makeText(sInstance, alphaString, Toast.LENGTH_LONG);
+        toast.setGravity(Gravity.TOP, 0, 0);
+        toast.show();
     }
 }

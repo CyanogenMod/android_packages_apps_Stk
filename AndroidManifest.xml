@@ -82,6 +82,7 @@
                 <action android:name= "android.intent.action.stk.command" />
                 <action android:name= "android.intent.action.stk.session_end" />
                 <action android:name= "android.intent.action.stk.icc_status_change" />
+                <action android:name= "org.codeaurora.intent.action.stk.alpha_notify" />
             </intent-filter>
         </receiver>
 
