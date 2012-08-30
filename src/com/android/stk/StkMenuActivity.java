@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2007 The Android Open Source Project
+ * Copyright (c) 2013, The Linux Foundation. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -112,6 +113,7 @@ public class StkMenuActivity extends ListActivity {
         if (item == null) {
             return;
         }
+        cancelTimeOut();
         sendResponse(StkAppService.RES_ID_MENU_SELECTION, item.id, false);
         mAcceptUsersInput = false;
         mProgressView.setVisibility(View.VISIBLE);
@@ -170,7 +172,16 @@ public class StkMenuActivity extends ListActivity {
         super.onPause();
 
         appService.indicateMenuVisibility(false);
-        cancelTimeOut();
+        /*
+         * do not cancel the timer here cancelTimeOut(). If any higher/lower
+         * priority events such as incoming call, new sms, screen off intent,
+         * notification alerts, user actions such as 'User moving to another activtiy'
+         * etc.. occur during SELECT ITEM ongoing session,
+         * this activity would receive 'onPause()' event resulting in
+         * cancellation of the timer. As a result no terminal response is
+         * sent to the card.
+         */
+
     }
 
     @Override
