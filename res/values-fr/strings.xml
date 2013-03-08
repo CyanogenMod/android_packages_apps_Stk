@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--  Copyright (C) 2007 The Android Open Source Project
+<!-- Copyright (C) 2007 The Android Open Source Project
+     Copyright (C) 2013 The CyanogenMod Project
 
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
@@ -12,7 +13,7 @@
      WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
      See the License for the specific language governing permissions and
      limitations under the License.
- -->
+-->
 
 <resources xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
@@ -28,7 +29,8 @@
     <string name="button_no" msgid="1824959157582605627">"Non"</string>
     <string name="alphabet" msgid="1583185545938805861">"Alphabets"</string>
     <string name="digits" msgid="1746796679021682388">"Chiffres (0-9, *, #, +)"</string>
-    <string name="default_call_setup_msg" msgid="7960194995759849940">"Appel en cours..."</string>
+    <string name="default_call_setup_msg" msgid="7960194995759849940">"Appel en cours\u2026"</string>
+
     <string name="stk_app_state" msgid="18582277302584082">"État de l\'application"</string>
     <string name="enable_app" msgid="3701224550936728203">"Activé"</string>
     <string name="disable_app" msgid="6725081975611415214">"Désactivé"</string>
