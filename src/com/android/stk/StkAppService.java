@@ -61,6 +61,8 @@ import com.android.internal.telephony.cat.CatLog;
 import com.android.internal.telephony.cat.CatResponseMessage;
 import com.android.internal.telephony.cat.TextMessage;
 import com.android.internal.telephony.GsmAlphabet;
+import com.android.internal.telephony.uicc.IccRefreshResponse;
+import com.android.internal.telephony.uicc.IccCardStatus.CardState;
 
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -132,6 +134,7 @@ public class StkAppService extends Service implements Runnable {
     private static final int OP_DELAYED_MSG = 6;
     static final int OP_IDLE_SCREEN = 7;
     static final int OP_LOCALE_CHANGED = 8;
+    static final int OP_CARD_STATUS_CHANGED = 9;
 
     //Invalid SetupEvent
     static final int INVALID_SETUP_EVENT = 0xFF;
@@ -222,6 +225,7 @@ public class StkAppService extends Service implements Runnable {
             break;
         case OP_RESPONSE:
         case OP_IDLE_SCREEN:
+        case OP_CARD_STATUS_CHANGED:
             msg.obj = args;
             /* falls through */
         case OP_LAUNCH_APP:
@@ -387,6 +391,41 @@ public class StkAppService extends Service implements Runnable {
                 CatLog.d(this, "Locale Changed");
                 checkForSetupEvent(LANGUAGE_SELECTION_EVENT,(Bundle) msg.obj);
                 break;
+            case OP_CARD_STATUS_CHANGED:
+                CatLog.d(this, "Card/Icc Status change received");
+                handleCardStatusChangeAndIccRefresh((Bundle) msg.obj);
+                break;
+            }
+        }
+
+        private void handleCardStatusChangeAndIccRefresh(Bundle args) {
+            boolean cardStatus = args.getBoolean(AppInterface.CARD_STATUS);
+
+            CatLog.d(this, "CardStatus: " + cardStatus);
+            if (cardStatus == false) {
+                CatLog.d(this, "CARD is ABSENT");
+                // Uninstall STKAPP, Clear Idle text, Stop StkAppService
+                StkAppInstaller.unInstall(mContext);
+                mNotificationManager.cancel(STK_NOTIFICATION_ID);
+                stopSelf();
+            } else {
+                IccRefreshResponse state = new IccRefreshResponse();
+                state.refreshResult = args.getInt(AppInterface.REFRESH_RESULT);
+
+                CatLog.d(this, "Icc Refresh Result: "+ state.refreshResult);
+                if ((state.refreshResult == IccRefreshResponse.REFRESH_RESULT_INIT) ||
+                    (state.refreshResult == IccRefreshResponse.REFRESH_RESULT_RESET)) {
+                    // Clear Idle Text
+                    mNotificationManager.cancel(STK_NOTIFICATION_ID);
+                    mIdleModeTextCmd = null;
+                }
+
+                if (state.refreshResult == IccRefreshResponse.REFRESH_RESULT_RESET) {
+                    // Uninstall STkmenu
+                    StkAppInstaller.unInstall(mContext);
+                    mCurrentMenu = null;
+                    mMainCmd = null;
+                }
             }
         }
     }
