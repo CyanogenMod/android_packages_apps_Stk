@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2007 The Android Open Source Project
+ * Copyright (c) 2009, 2012-2013 The Linux Foundation. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +18,7 @@
 package com.android.stk;
 
 import com.android.internal.telephony.cat.AppInterface;
+import com.android.internal.telephony.uicc.IccRefreshResponse;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -46,6 +48,8 @@ public class StkCmdReceiver extends BroadcastReceiver {
             handleLocaleChange(context);
         } else if (action.equals(AppInterface.CAT_ALPHA_NOTIFY_ACTION)) {
             handleAlphaNotify(context, intent);
+        } else if (action.equals(AppInterface.CAT_ICC_STATUS_CHANGE)) {
+            handleCardStatusChange(context, intent);
         }
     }
 
@@ -85,6 +89,24 @@ public class StkCmdReceiver extends BroadcastReceiver {
         String alphaString = intent.getStringExtra(AppInterface.ALPHA_STRING);
         args.putInt(StkAppService.OPCODE, StkAppService.OP_ALPHA_NOTIFY);
         args.putString(AppInterface.ALPHA_STRING, alphaString);
+        context.startService(new Intent(context, StkAppService.class)
+                .putExtras(args));
+    }
+
+    private void handleCardStatusChange(Context context, Intent intent) {
+        // If the Card is absent then check if the StkAppService is even
+        // running before starting it to stop it right away
+        if ((intent.getBooleanExtra(AppInterface.CARD_STATUS, false) == false)
+                && StkAppService.getInstance() == null) {
+            return;
+        }
+        Bundle args = new Bundle();
+        args.putInt(StkAppService.OPCODE, StkAppService.OP_CARD_STATUS_CHANGED);
+        args.putBoolean(AppInterface.CARD_STATUS,
+                intent.getBooleanExtra(AppInterface.CARD_STATUS, true));
+        args.putInt(AppInterface.REFRESH_RESULT,
+                intent.getIntExtra(AppInterface.REFRESH_RESULT,
+                IccRefreshResponse.REFRESH_RESULT_FILE_UPDATE));
         context.startService(new Intent(context, StkAppService.class)
                 .putExtras(args));
     }
