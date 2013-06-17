@@ -1,6 +1,7 @@
 /*
+ * Copyright (c) 2011-2013 The Linux Foundation. All rights reserved.
+ * Not a Contribution.
  * Copyright (C) 2007 The Android Open Source Project
- * Copyright (c) 2013, The Linux Foundation. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,6 +48,7 @@ public class StkMenuActivity extends ListActivity {
     private Menu mStkMenu = null;
     private int mState = STATE_MAIN;
     private boolean mAcceptUsersInput = true;
+    private int mSlotId = 0;
 
     private TextView mTitleTextView = null;
     private ImageView mTitleIconView = null;
@@ -147,8 +149,7 @@ public class StkMenuActivity extends ListActivity {
     public void onResume() {
         super.onResume();
 
-        appService.indicateMenuVisibility(true);
-        mStkMenu = appService.getMenu();
+        appService.indicateMenuVisibility(true, mSlotId);
         if (mStkMenu == null) {
             finish();
             return;
@@ -171,7 +172,7 @@ public class StkMenuActivity extends ListActivity {
     public void onPause() {
         super.onPause();
 
-        appService.indicateMenuVisibility(false);
+        appService.indicateMenuVisibility(false, mSlotId);
         /*
          * do not cancel the timer here cancelTimeOut(). If any higher/lower
          * priority events such as incoming call, new sms, screen off intent,
@@ -305,6 +306,13 @@ public class StkMenuActivity extends ListActivity {
 
         if (intent != null) {
             mState = intent.getIntExtra("STATE", STATE_MAIN);
+            mSlotId = intent.getIntExtra(StkAppService.SLOT_ID, 0);
+
+            if (mState == STATE_SECONDARY) {
+                mStkMenu = intent.getParcelableExtra("MENU");
+            } else {
+                mStkMenu = appService.getMenu(mSlotId);
+            }
         } else {
             finish();
         }
@@ -338,6 +346,7 @@ public class StkMenuActivity extends ListActivity {
         args.putInt(StkAppService.RES_ID, resId);
         args.putInt(StkAppService.MENU_SELECTION, itemId);
         args.putBoolean(StkAppService.HELP, help);
+        args.putInt(StkAppService.SLOT_ID, mSlotId);
         mContext.startService(new Intent(mContext, StkAppService.class)
                 .putExtras(args));
     }
