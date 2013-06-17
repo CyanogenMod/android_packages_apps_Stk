@@ -1,6 +1,7 @@
 /*
  * Copyright (C) 2007 The Android Open Source Project
- * Copyright (c) 2013, The Linux Foundation. All rights reserved.
+ * Copyright (c) 2011-2013 The Linux Foundation. All rights reserved.
+ * Not a Contribution.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -54,6 +55,7 @@ public class StkInputActivity extends Activity implements View.OnClickListener,
     private View mYesNoLayout = null;
     private View mNormalLayout = null;
     private Input mStkInput = null;
+    private int mSlotId = 0;
 
     // Constants
     private static final int STATE_TEXT = 1;
@@ -138,6 +140,7 @@ public class StkInputActivity extends Activity implements View.OnClickListener,
         Intent intent = getIntent();
         if (intent != null) {
             mStkInput = intent.getParcelableExtra("INPUT");
+            mSlotId = intent.getIntExtra(StkAppService.SLOT_ID, 0);
             if (mStkInput == null) {
                 finish();
             } else {
@@ -194,6 +197,7 @@ public class StkInputActivity extends Activity implements View.OnClickListener,
             args.putString(StkAppService.INPUT, input);
         }
         args.putBoolean(StkAppService.HELP, help);
+        args.putInt(StkAppService.SLOT_ID, mSlotId);
         mContext.startService(new Intent(mContext, StkAppService.class)
                 .putExtras(args));
     }

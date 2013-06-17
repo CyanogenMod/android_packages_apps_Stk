@@ -1,6 +1,7 @@
 /*
  * Copyright (C) 2007 The Android Open Source Project
- * Copyright (c) 2013, The Linux Foundation. All rights reserved.
+ * Copyright (c) 2009,2012-2013 The Linux Foundation. All rights reserved.
+ * Not a Contribution.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,6 +42,7 @@ public class StkDialogActivity extends Activity implements View.OnClickListener 
     TextMessage mTextMsg;
 
     StkAppService appService = StkAppService.getInstance();
+    private int mSlotId = 0;
 
     Handler mTimeoutHandler = new Handler() {
         @Override
@@ -119,6 +121,8 @@ public class StkDialogActivity extends Activity implements View.OnClickListener 
             return;
         }
 
+        appService.setDisplayTextDlgVisibility(true, mSlotId);
+
         Window window = getWindow();
 
         TextView mMessageView = (TextView) window
@@ -166,6 +170,9 @@ public class StkDialogActivity extends Activity implements View.OnClickListener 
          * cancellation of the timer. As a result no terminal response is
          * sent to the card.
          */
+
+        appService.setDisplayTextDlgVisibility(false, mSlotId);
+
     }
 
     @Override
@@ -193,6 +200,7 @@ public class StkDialogActivity extends Activity implements View.OnClickListener 
         args.putInt(StkAppService.OPCODE, StkAppService.OP_RESPONSE);
         args.putInt(StkAppService.RES_ID, resId);
         args.putBoolean(StkAppService.CONFIRMATION, confirmed);
+        args.putInt(StkAppService.SLOT_ID, mSlotId);
         startService(new Intent(this, StkAppService.class).putExtras(args));
     }
 
@@ -204,6 +212,7 @@ public class StkDialogActivity extends Activity implements View.OnClickListener 
 
         if (intent != null) {
             mTextMsg = intent.getParcelableExtra("TEXT");
+            mSlotId = intent.getIntExtra(StkAppService.SLOT_ID, 0);
         } else {
             finish();
         }
