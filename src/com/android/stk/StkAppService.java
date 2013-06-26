@@ -167,7 +167,7 @@ public class StkAppService extends Service implements Runnable {
     // Notification id used to display Idle Mode text in NotificationManager.
     private static final int STK_NOTIFICATION_ID = 333;
     private CatCmdMessage mIdleModeTextCmd = null;
-    private boolean mDisplayText = false;
+    private boolean mIsDisplayTextPending = false;
     private boolean mScreenIdle = true;
 
     // Inner class used for queuing telephony messages (proactive commands,
@@ -364,17 +364,15 @@ public class StkAppService extends Service implements Runnable {
                 }
                 break;
             case OP_RESPONSE:
-                if (responseNeeded) {
                     handleCmdResponse((Bundle) msg.obj);
-                }
                 // call delayed commands if needed.
                 if (mCmdsQ.size() != 0) {
                     callDelayedMsg();
                 } else {
                     mCmdInProgress = false;
                 }
-                // reset response needed state var to its original value.
-                responseNeeded = true;
+                //reset mIsDisplayTextPending after sending the  response.
+                mIsDisplayTextPending = false;
                 break;
             case OP_END_SESSION:
                 if (!mCmdInProgress) {
@@ -453,13 +451,16 @@ public class StkAppService extends Service implements Runnable {
         if (mIdleModeTextCmd != null) {
            launchIdleText();
         }
-        if (mDisplayText) {
+
+        // Show user the display text or send screen busy response
+        // if previous display text command is pending.
+        if (mIsDisplayTextPending) {
             if (!mScreenIdle) {
                 sendScreenBusyResponse();
             } else {
                 launchTextDialog();
             }
-            mDisplayText = false;
+            mIsDisplayTextPending = false;
             // If an idle text proactive command is set then the
             // request for getting screen status still holds true.
             if (mIdleModeTextCmd == null) {
@@ -478,8 +479,6 @@ public class StkAppService extends Service implements Runnable {
         CatLog.d(this, "SCREEN_BUSY");
         resMsg.setResultCode(ResultCode.TERMINAL_CRNTLY_UNABLE_TO_PROCESS);
         mStkService.onCmdResponse(resMsg);
-        // reset response needed state var to its original value.
-        responseNeeded = true;
         if (mCmdsQ.size() != 0) {
             callDelayedMsg();
         } else {
@@ -587,7 +586,6 @@ public class StkAppService extends Service implements Runnable {
         switch (cmdMsg.getCmdType()) {
         case DISPLAY_TEXT:
             TextMessage msg = cmdMsg.geTextMessage();
-            responseNeeded = msg.responseNeeded;
             waitForUsersResponse = msg.responseNeeded;
             if (lastSelectedItem != null) {
                 msg.title = lastSelectedItem;
@@ -608,7 +606,7 @@ public class StkAppService extends Service implements Runnable {
                 Intent StkIntent = new Intent(AppInterface.CHECK_SCREEN_IDLE_ACTION);
                 StkIntent.putExtra(SCREEN_STATUS_REQUEST, true);
                 sendBroadcast(StkIntent);
-                mDisplayText = true;
+                mIsDisplayTextPending = true;
             } else {
                 launchTextDialog();
             }
@@ -731,7 +729,7 @@ public class StkAppService extends Service implements Runnable {
             mSetupEventListSettings = mCurrentCmd.getSetEventList();
             mCurrentSetupEventCmd = mCurrentCmd;
             mCurrentCmd = mMainCmd;
-            if ((mIdleModeTextCmd == null) && (!mDisplayText)) {
+            if ((mIdleModeTextCmd == null) && (!mIsDisplayTextPending)) {
 
                 for (int i : mSetupEventListSettings.eventList) {
                     if (i == IDLE_SCREEN_AVAILABLE_EVENT) {
@@ -935,11 +933,18 @@ public class StkAppService extends Service implements Runnable {
         Intent newIntent = new Intent(this, StkDialogActivity.class);
         newIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
                 | Intent.FLAG_ACTIVITY_CLEAR_TOP
+                | Intent.FLAG_ACTIVITY_SINGLE_TOP
                 | Intent.FLAG_ACTIVITY_NO_HISTORY
                 | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS
                 | getFlagActivityNoUserAction(InitiatedByUserAction.unknown));
         newIntent.putExtra("TEXT", mCurrentCmd.geTextMessage());
         startActivity(newIntent);
+        // For display texts with immediate response, send the terminal response
+        // immediately. responseNeeded will be false, if display text command has
+        // the immediate response tlv.
+        if (!mCurrentCmd.geTextMessage().responseNeeded) {
+            sendResponse(RES_ID_CONFIRM, mCurrentSlotId, true);
+        }
     }
 
     private void sendSetUpEventResponse(int event, byte[] addedInfo) {
