@@ -24,6 +24,8 @@ import android.app.Service;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -144,11 +146,6 @@ public class StkAppService extends Service implements Runnable {
     @Override
     public void onCreate() {
         // Initialize members
-        // This can return null if StkService is not yet instantiated, but it's ok
-        // If this is null we will do getInstance before we need to use this
-        mStkService = com.android.internal.telephony.cat.CatService
-                .getInstance();
-
         mCmdsQ = new LinkedList<DelayedCmd>();
         Thread serviceThread = new Thread(null, this, "Stk App Service");
         serviceThread.start();
@@ -160,8 +157,17 @@ public class StkAppService extends Service implements Runnable {
 
     @Override
     public void onStart(Intent intent, int startId) {
-        waitForLooper();
 
+        mStkService = com.android.internal.telephony.cat.CatService
+                .getInstance();
+
+        if (mStkService == null) {
+            stopSelf();
+            CatLog.d(this, " Unable to get Service handle");
+            return;
+        }
+
+        waitForLooper();
         // onStart() method can be passed a null intent
         // TODO: replace onStart() with onStartCommand()
         if (intent == null) {
@@ -388,6 +394,7 @@ public class StkAppService extends Service implements Runnable {
         case DISPLAY_TEXT:
             TextMessage msg = cmdMsg.geTextMessage();
             responseNeeded = msg.responseNeeded;
+            waitForUsersResponse = msg.responseNeeded;
             if (lastSelectedItem != null) {
                 msg.title = lastSelectedItem;
             } else if (mMainCmd != null){
@@ -547,7 +554,7 @@ public class StkAppService extends Service implements Runnable {
                 resMsg.setResultCode(ResultCode.OK);
                 resMsg.setConfirmation(confirmed);
                 if (confirmed) {
-                    launchCallMsg();
+                    launchEventMessage(mCurrentCmd.getCallSettings().callMsg);
                 }
                 break;
             }
@@ -644,7 +651,7 @@ public class StkAppService extends Service implements Runnable {
     private void launchTextDialog() {
         Intent newIntent = new Intent(this, StkDialogActivity.class);
         newIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
-                | Intent.FLAG_ACTIVITY_MULTIPLE_TASK
+                | Intent.FLAG_ACTIVITY_CLEAR_TASK
                 | Intent.FLAG_ACTIVITY_NO_HISTORY
                 | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS
                 | getFlagActivityNoUserAction(InitiatedByUserAction.unknown));
@@ -653,7 +660,10 @@ public class StkAppService extends Service implements Runnable {
     }
 
     private void launchEventMessage() {
-        TextMessage msg = mCurrentCmd.geTextMessage();
+        launchEventMessage(mCurrentCmd.geTextMessage());
+    }
+
+    private void launchEventMessage(TextMessage msg) {
         if (msg == null || msg.text == null) {
             return;
         }
@@ -696,9 +706,9 @@ public class StkAppService extends Service implements Runnable {
             return;
         }
 
-        Intent intent = new Intent(Intent.ACTION_VIEW);
+        Intent intent = null;
+        Uri data = null;
 
-        Uri data;
         if (settings.url != null) {
             CatLog.d(this, "settings.url = " + settings.url);
             if ((settings.url.startsWith("http://") || (settings.url.startsWith("https://")))) {
@@ -708,17 +718,17 @@ public class StkAppService extends Service implements Runnable {
                 CatLog.d(this, "modifiedUrl = " + modifiedUrl);
                 data = Uri.parse(modifiedUrl);
             }
-        } else {
-            // If no URL specified, just bring up the "home page".
-            //
-            // (Note we need to specify *something* in the intent's data field
-            // here, since if you fire off a VIEW intent with no data at all
-            // you'll get an activity chooser rather than the browser.  There's
-            // no specific URI that means "use the default home page", so
-            // instead let's just explicitly bring up http://google.com.)
-            data = Uri.parse("http://google.com/");
         }
-        intent.setData(data);
+        if (data != null) {
+            intent = new Intent(Intent.ACTION_VIEW);
+            intent.setData(data);
+        } else {
+            // if the command did not contain a URL,
+            // launch the browser to the default homepage.
+            CatLog.d(this, "launch browser with default URL ");
+            intent = Intent.makeMainSelectorActivity(Intent.ACTION_MAIN,
+                    Intent.CATEGORY_APP_BROWSER);
+        }
 
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         switch (settings.mode) {
@@ -742,19 +752,6 @@ public class StkAppService extends Service implements Runnable {
         } catch (InterruptedException e) {}
     }
 
-    private void launchCallMsg() {
-        TextMessage msg = mCurrentCmd.getCallSettings().callMsg;
-        if (msg.text == null || msg.text.length() == 0) {
-            return;
-        }
-        msg.title = lastSelectedItem;
-
-        Toast toast = Toast.makeText(mContext.getApplicationContext(), msg.text,
-                Toast.LENGTH_LONG);
-        toast.setGravity(Gravity.BOTTOM, 0, 0);
-        toast.show();
-    }
-
     private void launchIdleText() {
         TextMessage msg = mCurrentCmd.geTextMessage();
 
@@ -766,33 +763,30 @@ public class StkAppService extends Service implements Runnable {
         if (msg.text == null) {
             mNotificationManager.cancel(STK_NOTIFICATION_ID);
         } else {
-            Notification notification = new Notification();
-            RemoteViews contentView = new RemoteViews(
-                    PACKAGE_NAME,
-                    com.android.internal.R.layout.status_bar_latest_event_content);
-
-            notification.flags |= Notification.FLAG_NO_CLEAR;
-            notification.icon = com.android.internal.R.drawable.stat_notify_sim_toolkit;
-            // Set text and icon for the status bar and notification body.
-            if (!msg.iconSelfExplanatory) {
-                notification.tickerText = msg.text;
-                contentView.setTextViewText(com.android.internal.R.id.text,
-                        msg.text);
-            }
-            if (msg.icon != null) {
-                contentView.setImageViewBitmap(com.android.internal.R.id.icon,
-                        msg.icon);
-            } else {
-                contentView
-                        .setImageViewResource(
-                                com.android.internal.R.id.icon,
-                                com.android.internal.R.drawable.stat_notify_sim_toolkit);
-            }
-            notification.contentView = contentView;
-            notification.contentIntent = PendingIntent.getService(mContext, 0,
+            PendingIntent pendingIntent = PendingIntent.getService(mContext, 0,
                     new Intent(mContext, StkAppService.class), 0);
 
-            mNotificationManager.notify(STK_NOTIFICATION_ID, notification);
+            final Notification.Builder notificationBuilder = new Notification.Builder(
+                    StkAppService.this);
+            notificationBuilder.setContentTitle("");
+            notificationBuilder
+                    .setSmallIcon(com.android.internal.R.drawable.stat_notify_sim_toolkit);
+            notificationBuilder.setContentIntent(pendingIntent);
+            notificationBuilder.setOngoing(true);
+            // Set text and icon for the status bar and notification body.
+            if (!msg.iconSelfExplanatory) {
+                notificationBuilder.setContentText(msg.text);
+            }
+            if (msg.icon != null) {
+                notificationBuilder.setLargeIcon(msg.icon);
+            } else {
+                Bitmap bitmapIcon = BitmapFactory.decodeResource(StkAppService.this
+                    .getResources().getSystem(),
+                    com.android.internal.R.drawable.stat_notify_sim_toolkit);
+                notificationBuilder.setLargeIcon(bitmapIcon);
+            }
+
+            mNotificationManager.notify(STK_NOTIFICATION_ID, notificationBuilder.build());
         }
     }
 
