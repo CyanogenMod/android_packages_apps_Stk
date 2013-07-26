@@ -112,6 +112,7 @@ public class StkCmdReceiver extends BroadcastReceiver {
         args.putInt(AppInterface.REFRESH_RESULT,
                 intent.getIntExtra(AppInterface.REFRESH_RESULT,
                 IccRefreshResponse.REFRESH_RESULT_FILE_UPDATE));
+        args.putInt(StkAppService.SLOT_ID, intent.getIntExtra("SLOT_ID", 0));
         context.startService(new Intent(context, StkAppService.class)
                 .putExtras(args));
     }
