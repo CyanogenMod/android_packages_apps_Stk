@@ -23,6 +23,7 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -35,6 +36,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
 import android.os.Message;
+import android.os.SystemProperties;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.view.Gravity;
@@ -63,7 +65,9 @@ import com.android.internal.telephony.uicc.IccRefreshResponse;
 import com.android.internal.telephony.uicc.IccCardStatus.CardState;
 import com.android.internal.telephony.GsmAlphabet;
 
+import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 
 import static com.android.internal.telephony.cat.CatCmdMessage.
                    SetupEventListConstants.IDLE_SCREEN_AVAILABLE_EVENT;
@@ -98,6 +102,7 @@ public class StkAppService extends Service implements Runnable {
     private boolean mClearSelectItem = false;
     private boolean mDisplayTextDlgIsVisibile = false;
     private CatCmdMessage mCurrentSetupEventCmd = null;
+    private int mCurrentSlotId = 0;
 
     // Used for setting FLAG_ACTIVITY_NO_USER_ACTION when
     // creating an intent.
@@ -117,6 +122,7 @@ public class StkAppService extends Service implements Runnable {
     static final String CHOICE = "choice";
     static final String SCREEN_STATUS = "screen status";
     static final String SCREEN_STATUS_REQUEST = "SCREEN_STATUS_REQUEST";
+    static final String SLOT_ID = "slot_id";
 
     // These below constants are used for SETUP_EVENT_LIST
     static final String SETUP_EVENT_TYPE = "event";
@@ -176,6 +182,9 @@ public class StkAppService extends Service implements Runnable {
             this.msg = msg;
         }
     }
+
+    // system property to set the STK specific default url for launch browser proactive cmds
+    private static final String STK_BROWSER_DEFAULT_URL_SYSPROP = "persist.radio.stk.default_url";
 
     @Override
     public void onCreate() {
@@ -478,11 +487,14 @@ public class StkAppService extends Service implements Runnable {
         }
     }
 
-    private void sendResponse(int resId) {
+    private void sendResponse(int resId, int slotId, boolean confirm) {
         Message msg = mServiceHandler.obtainMessage();
         msg.arg1 = OP_RESPONSE;
         Bundle args = new Bundle();
         args.putInt(StkAppService.RES_ID, resId);
+        args.putInt(StkAppService.SLOT_ID, slotId);
+        args.putBoolean(StkAppService.CONFIRMATION, confirm);
+        CatLog.d(this, "sendResponse mCurrentSlotId: " + mCurrentSlotId );
         msg.obj = args;
         mServiceHandler.sendMessage(msg);
     }
@@ -662,7 +674,21 @@ public class StkAppService extends Service implements Runnable {
             }
             break;
         case LAUNCH_BROWSER:
-            launchConfirmationDialog(mCurrentCmd.geTextMessage());
+            TextMessage alphaId = mCurrentCmd.geTextMessage();
+            if ((mCurrentCmd.getBrowserSettings().mode
+                    == LaunchBrowserMode.LAUNCH_IF_NOT_ALREADY_LAUNCHED) &&
+                    ((alphaId == null) || (alphaId.text == null) || (alphaId.text.length() == 0))) {
+                // don't need user confirmation in this case
+                // just launch the browser or spawn a new tab
+                CatLog.d(this, "Browser mode is: launch if not already launched " +
+                        "and user confirmation is not currently needed.\n" +
+                        "supressing confirmation dialogue and confirming silently...");
+                launchBrowser = true;
+                mBrowserSettings = mCurrentCmd.getBrowserSettings();
+                sendResponse(RES_ID_CONFIRM, mCurrentSlotId, true);
+            } else {
+                launchConfirmationDialog(alphaId);
+            }
             break;
         case SET_UP_CALL:
             TextMessage mesg = mCurrentCmd.getCallSettings().confirmMsg;
@@ -1040,30 +1066,31 @@ public class StkAppService extends Service implements Runnable {
             return;
         }
 
-        Intent intent = null;
         Uri data = null;
-
-        if (settings.url != null) {
-            CatLog.d(this, "settings.url = " + settings.url);
-            if ((settings.url.startsWith("http://") || (settings.url.startsWith("https://")))) {
-                data = Uri.parse(settings.url);
-            } else {
-                String modifiedUrl = "http://" + settings.url;
-                CatLog.d(this, "modifiedUrl = " + modifiedUrl);
-                data = Uri.parse(modifiedUrl);
-            }
-        }
-        if (data != null) {
-            intent = new Intent(Intent.ACTION_VIEW);
-            intent.setData(data);
-        } else {
+        String url;
+        if (settings.url == null) {
             // if the command did not contain a URL,
             // launch the browser to the default homepage.
-            CatLog.d(this, "launch browser with default URL ");
-            intent = Intent.makeMainSelectorActivity(Intent.ACTION_MAIN,
-                    Intent.CATEGORY_APP_BROWSER);
+            CatLog.d(this, "no url data provided by proactive command." +
+                       " launching browser with stk default URL ... ");
+            url = SystemProperties.get(STK_BROWSER_DEFAULT_URL_SYSPROP,
+                    "http://www.google.com");
+        } else {
+            CatLog.d(this, "launch browser command has attached url = " + settings.url);
+            url = settings.url;
         }
 
+        if (url.startsWith("http://") || url.startsWith("https://")) {
+            data = Uri.parse(url);
+            CatLog.d(this, "launching browser with url = " + url);
+        } else {
+            String modifiedUrl = "http://" + url;
+            data = Uri.parse(modifiedUrl);
+            CatLog.d(this, "launching browser with modified url = " + modifiedUrl);
+        }
+
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(data);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         switch (settings.mode) {
         case USE_EXISTING_BROWSER:
