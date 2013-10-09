@@ -226,6 +226,7 @@ public class StkAppService extends Service implements Runnable {
         case OP_RESPONSE:
         case OP_IDLE_SCREEN:
         case OP_CARD_STATUS_CHANGED:
+        case OP_LOCALE_CHANGED:
             msg.obj = args;
             /* falls through */
         case OP_LAUNCH_APP:
