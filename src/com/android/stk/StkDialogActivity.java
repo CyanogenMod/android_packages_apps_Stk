@@ -1,5 +1,7 @@
 /*
  * Copyright (C) 2007 The Android Open Source Project
+ * Copyright (c) 2009,2012-2013 The Linux Foundation. All rights reserved.
+ * Not a Contribution.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +19,7 @@
 package com.android.stk;
 
 import com.android.internal.telephony.cat.TextMessage;
+import com.android.internal.telephony.cat.CatLog;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -37,6 +40,9 @@ import android.widget.TextView;
 public class StkDialogActivity extends Activity implements View.OnClickListener {
     // members
     TextMessage mTextMsg;
+
+    StkAppService appService = StkAppService.getInstance();
+    private int mSlotId = 0;
 
     Handler mTimeoutHandler = new Handler() {
         @Override
@@ -64,18 +70,9 @@ public class StkDialogActivity extends Activity implements View.OnClickListener 
     protected void onCreate(Bundle icicle) {
         super.onCreate(icicle);
 
-        initFromIntent(getIntent());
-        if (mTextMsg == null) {
-            finish();
-            return;
-        }
-
         requestWindowFeature(Window.FEATURE_LEFT_ICON);
-        Window window = getWindow();
 
         setContentView(R.layout.stk_msg_dialog);
-        TextView mMessageView = (TextView) window
-                .findViewById(R.id.dialog_message);
 
         Button okButton = (Button) findViewById(R.id.button_ok);
         Button cancelButton = (Button) findViewById(R.id.button_cancel);
@@ -83,7 +80,56 @@ public class StkDialogActivity extends Activity implements View.OnClickListener 
         okButton.setOnClickListener(this);
         cancelButton.setOnClickListener(this);
 
+    }
+
+    public void onClick(View v) {
+        String input = null;
+        if (mTextMsg.responseNeeded) {
+             switch (v.getId()) {
+                 case OK_BUTTON:
+                     cancelTimeOut();
+                     sendResponse(StkAppService.RES_ID_CONFIRM, true);
+                     break;
+                 case CANCEL_BUTTON:
+                     cancelTimeOut();
+                     sendResponse(StkAppService.RES_ID_CONFIRM, false);
+                     break;
+             }
+        }
+        finish();
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        switch (keyCode) {
+        case KeyEvent.KEYCODE_BACK:
+            cancelTimeOut();
+            sendResponse(StkAppService.RES_ID_BACKWARD);
+            finish();
+            break;
+        }
+        return false;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        initFromIntent(getIntent());
+        if (mTextMsg == null) {
+            finish();
+            return;
+        }
+
+        appService.setDisplayTextDlgVisibility(true, mSlotId);
+
+        Window window = getWindow();
+
+        TextView mMessageView = (TextView) window
+                .findViewById(R.id.dialog_message);
+
         setTitle(mTextMsg.title);
+
         if (!(mTextMsg.iconSelfExplanatory && mTextMsg.icon != null)) {
             mMessageView.setText(mTextMsg.text);
         }
@@ -95,37 +141,19 @@ public class StkDialogActivity extends Activity implements View.OnClickListener 
             window.setFeatureDrawable(Window.FEATURE_LEFT_ICON,
                     new BitmapDrawable(mTextMsg.icon));
         }
-    }
 
-    public void onClick(View v) {
-        String input = null;
 
-        switch (v.getId()) {
-        case OK_BUTTON:
-            sendResponse(StkAppService.RES_ID_CONFIRM, true);
-            finish();
-            break;
-        case CANCEL_BUTTON:
-            sendResponse(StkAppService.RES_ID_CONFIRM, false);
-            finish();
-            break;
+        /*
+         * If userClear flag is set and dialogduration is set to 0, display Text
+         * should be displayed to user for ever until some high priority event occurred
+         * (incoming call, MMI code execution etc as mentioned under section
+         * ETSI 102.223, 6.4.1)
+         */
+        if (StkApp.calculateDurationInMilis(mTextMsg.duration) == 0 &&
+            !mTextMsg.responseNeeded && mTextMsg.userClear) {
+            CatLog.d(this, "User should clear text..show message for ever");
+            return;
         }
-    }
-
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        switch (keyCode) {
-        case KeyEvent.KEYCODE_BACK:
-            sendResponse(StkAppService.RES_ID_BACKWARD);
-            finish();
-            break;
-        }
-        return false;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
         startTimeOut(mTextMsg.userClear);
     }
 
@@ -133,7 +161,18 @@ public class StkDialogActivity extends Activity implements View.OnClickListener 
     public void onPause() {
         super.onPause();
 
-        cancelTimeOut();
+        /*
+         * do not cancel the timer here cancelTimeOut(). If any higher/lower
+         * priority events such as incoming call, new sms, screen off intent,
+         * notification alerts, user actions such as 'User moving to another activtiy'
+         * etc.. occur during Display Text ongoing session,
+         * this activity would receive 'onPause()' event resulting in
+         * cancellation of the timer. As a result no terminal response is
+         * sent to the card.
+         */
+
+        appService.setDisplayTextDlgVisibility(false, mSlotId);
+
     }
 
     @Override
@@ -150,11 +189,18 @@ public class StkDialogActivity extends Activity implements View.OnClickListener 
         mTextMsg = savedInstanceState.getParcelable(TEXT);
     }
 
+    @Override
+    protected void onNewIntent(Intent intent) {
+        CatLog.d(this, "onNewIntent - updating the same Dialog box");
+        setIntent(intent);
+    }
+
     private void sendResponse(int resId, boolean confirmed) {
         Bundle args = new Bundle();
         args.putInt(StkAppService.OPCODE, StkAppService.OP_RESPONSE);
         args.putInt(StkAppService.RES_ID, resId);
         args.putBoolean(StkAppService.CONFIRMATION, confirmed);
+        args.putInt(StkAppService.SLOT_ID, mSlotId);
         startService(new Intent(this, StkAppService.class).putExtras(args));
     }
 
@@ -166,6 +212,7 @@ public class StkDialogActivity extends Activity implements View.OnClickListener 
 
         if (intent != null) {
             mTextMsg = intent.getParcelableExtra("TEXT");
+            mSlotId = intent.getIntExtra(StkAppService.SLOT_ID, 0);
         } else {
             finish();
         }
@@ -176,9 +223,11 @@ public class StkDialogActivity extends Activity implements View.OnClickListener 
     }
 
     private void startTimeOut(boolean waitForUserToClear) {
+
+        int dialogDuration = 0;
         // Reset timeout.
         cancelTimeOut();
-        int dialogDuration = StkApp.calculateDurationInMilis(mTextMsg.duration);
+        dialogDuration = StkApp.calculateDurationInMilis(mTextMsg.duration);
         // If duration is specified, this has priority. If not, set timeout
         // according to condition given by the card.
         if (dialogDuration == 0) {
