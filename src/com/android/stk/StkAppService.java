@@ -164,6 +164,7 @@ public class StkAppService extends Service implements Runnable {
         if (mStkService == null) {
             stopSelf();
             CatLog.d(this, " Unable to get Service handle");
+            StkAppInstaller.unInstall(mContext);
             return;
         }
 
@@ -469,7 +470,10 @@ public class StkAppService extends Service implements Runnable {
                     break;
                 }
             }
-            launchTransientEventMessage();
+            /*
+             * Display indication in the form of a toast to the user if required.
+             */
+            launchEventMessage();
             break;
         }
 
@@ -499,6 +503,7 @@ public class StkAppService extends Service implements Runnable {
 
         // set result code
         boolean helpRequired = args.getBoolean(HELP, false);
+        boolean confirmed    = false;
 
         switch(args.getInt(RES_ID)) {
         case RES_ID_MENU_SELECTION:
@@ -536,7 +541,7 @@ public class StkAppService extends Service implements Runnable {
             break;
         case RES_ID_CONFIRM:
             CatLog.d(this, "RES_ID_CONFIRM");
-            boolean confirmed = args.getBoolean(CONFIRMATION);
+            confirmed = args.getBoolean(CONFIRMATION);
             switch (mCurrentCmd.getCmdType()) {
             case DISPLAY_TEXT:
                 resMsg.setResultCode(confirmed ? ResultCode.OK
@@ -590,12 +595,19 @@ public class StkAppService extends Service implements Runnable {
             switch (choice) {
                 case YES:
                     resMsg.setResultCode(ResultCode.OK);
+                    confirmed = true;
                     break;
                 case NO:
                     resMsg.setResultCode(ResultCode.USER_NOT_ACCEPT);
                     break;
             }
+
+            if (mCurrentCmd.getCmdType().value() == AppInterface.CommandType.OPEN_CHANNEL
+                    .value()) {
+                resMsg.setConfirmation(confirmed);
+            }
             break;
+
         default:
             CatLog.d(this, "Unknown result id");
             return;
@@ -651,7 +663,7 @@ public class StkAppService extends Service implements Runnable {
     private void launchTextDialog() {
         Intent newIntent = new Intent(this, StkDialogActivity.class);
         newIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
-                | Intent.FLAG_ACTIVITY_CLEAR_TASK
+                | Intent.FLAG_ACTIVITY_CLEAR_TOP
                 | Intent.FLAG_ACTIVITY_NO_HISTORY
                 | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS
                 | getFlagActivityNoUserAction(InitiatedByUserAction.unknown));
