@@ -478,10 +478,8 @@ public class StkAppService extends Service {
                 // Uninstall STKAPP, Clear Idle text, Menu related variables.
                 StkAppInstaller.unInstall(mContext, mCurrentSlotId);
                 mNotificationManager.cancel(STK_NOTIFICATION_ID);
-                mCurrentMenu = null;
-                mMainCmd = null;
-                mSetupEventListSettings = null;
                 mStkService[mCurrentSlotId] = null;
+                cleanUp();
             } else {
                 IccRefreshResponse state = new IccRefreshResponse();
                 state.refreshResult = args.getInt(AppInterface.REFRESH_RESULT);
@@ -1440,6 +1438,28 @@ public class StkAppService extends Service {
         Toast toast = Toast.makeText(sInstance, alphaString, Toast.LENGTH_LONG);
         toast.setGravity(Gravity.TOP, 0, 0);
         toast.show();
+    }
+
+    private void cleanUp() {
+        mMainCmd = null;
+        mCurrentCmd = null;
+        mCurrentMenu = null;
+        lastSelectedItem = null;
+        responseNeeded = true;
+        mCmdInProgress = false;
+        launchBrowser = false;
+        mBrowserSettings = null;
+        mSetupEventListSettings = null;
+        mCmdsQ.clear();
+        mCurrentSetupEventCmd = null;
+        mIdleModeTextCmd = null;
+        mDisplayText = false;
+        mScreenIdle = true;
+        mMainMenu = null;
+        mCurrentSlotId = 0;
+        mClearSelectItem = false;
+        mDisplayTextDlgIsVisibile = false;
+        mMenuIsVisibile = false;
     }
 
     } // End of Service Handler class
