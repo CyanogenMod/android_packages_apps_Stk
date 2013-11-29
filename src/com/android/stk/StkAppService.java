@@ -39,6 +39,7 @@ import android.os.HandlerThread;
 import android.os.IBinder;
 import android.os.Looper;
 import android.os.Message;
+import android.os.SystemProperties;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.telephony.MSimTelephonyManager;
@@ -159,6 +160,9 @@ public class StkAppService extends Service {
 
     // Notification id used to display Idle Mode text in NotificationManager.
     private static final int STK_NOTIFICATION_ID = 333;
+
+    // system property to set the STK specific default url for launch browser proactive cmds
+    private static final String STK_BROWSER_DEFAULT_URL_SYSPROP = "persist.radio.stk.default_url";
 
     @Override
     public void onCreate() {
@@ -1195,30 +1199,31 @@ public class StkAppService extends Service {
             return;
         }
 
-        Intent intent = null;
         Uri data = null;
-
-        if (settings.url != null) {
-            CatLog.d(this, "settings.url = " + settings.url);
-            if ((settings.url.startsWith("http://") || (settings.url.startsWith("https://")))) {
-                data = Uri.parse(settings.url);
-            } else {
-                String modifiedUrl = "http://" + settings.url;
-                CatLog.d(this, "modifiedUrl = " + modifiedUrl);
-                data = Uri.parse(modifiedUrl);
-            }
-        }
-        if (data != null) {
-            intent = new Intent(Intent.ACTION_VIEW);
-            intent.setData(data);
-        } else {
+        String url;
+        if (settings.url == null) {
             // if the command did not contain a URL,
             // launch the browser to the default homepage.
-            CatLog.d(this, "launch browser with default URL ");
-            intent = Intent.makeMainSelectorActivity(Intent.ACTION_MAIN,
-                    Intent.CATEGORY_APP_BROWSER);
+            CatLog.d(this, "no url data provided by proactive command." +
+                       " launching browser with stk default URL ... ");
+            url = SystemProperties.get(STK_BROWSER_DEFAULT_URL_SYSPROP,
+                    "http://www.google.com");
+        } else {
+            CatLog.d(this, "launch browser command has attached url = " + settings.url);
+            url = settings.url;
         }
 
+        if (url.startsWith("http://") || url.startsWith("https://")) {
+            data = Uri.parse(url);
+            CatLog.d(this, "launching browser with url = " + url);
+        } else {
+            String modifiedUrl = "http://" + url;
+            data = Uri.parse(modifiedUrl);
+            CatLog.d(this, "launching browser with modified url = " + modifiedUrl);
+        }
+
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(data);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         switch (settings.mode) {
         case USE_EXISTING_BROWSER:
