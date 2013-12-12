@@ -524,6 +524,7 @@ public class StkAppService extends Service {
                 launchTextDialog();
             }
             mDisplayText = false;
+            mCurrentCmd = mMainCmd;
             // If an idle text proactive command is set then the
             // request for getting screen status still holds true.
             if (mIdleModeTextCmd == null) {
@@ -552,12 +553,13 @@ public class StkAppService extends Service {
         }
     }
 
-    private void sendResponse(int resId) {
+    private void sendResponse(int resId, int slotId, boolean confirm) {
         Message msg = this.obtainMessage();
         msg.arg1 = OP_RESPONSE;
         Bundle args = new Bundle();
         args.putInt(StkAppService.RES_ID, resId);
-        args.putInt(StkAppService.SLOT_ID, mCurrentSlotId);
+        args.putInt(StkAppService.SLOT_ID, slotId);
+        args.putBoolean(StkAppService.CONFIRMATION, confirm);
         CatLog.d(this, "sendResponse mCurrentSlotId: " + mCurrentSlotId );
         msg.obj = args;
         this.sendMessage(msg);
@@ -603,7 +605,7 @@ public class StkAppService extends Service {
     }
 
     private void handleSessionEnd() {
-        mCurrentCmd = mMainCmd;
+        if (!mDisplayText) mCurrentCmd = mMainCmd;
         lastSelectedItem = null;
         cancelTimeOut();
         // In case of SET UP MENU command which removed the app, don't
@@ -735,11 +737,25 @@ public class StkAppService extends Service {
             }
             break;
         case LAUNCH_BROWSER:
-            launchConfirmationDialog(mCurrentCmd.geTextMessage());
+            TextMessage alphaId = mCurrentCmd.geTextMessage();
+            if ((mCurrentCmd.getBrowserSettings().mode
+                    == LaunchBrowserMode.LAUNCH_IF_NOT_ALREADY_LAUNCHED) &&
+                    ((alphaId == null) || (alphaId.text == null) || (alphaId.text.length() == 0))) {
+                // don't need user confirmation in this case
+                // just launch the browser or spawn a new tab
+                CatLog.d(this, "Browser mode is: launch if not already launched " +
+                        "and user confirmation is not currently needed.\n" +
+                        "supressing confirmation dialogue and confirming silently...");
+                launchBrowser = true;
+                mBrowserSettings = mCurrentCmd.getBrowserSettings();
+                sendResponse(RES_ID_CONFIRM, mCurrentSlotId, true);
+            } else {
+                launchConfirmationDialog(alphaId);
+            }
             break;
         case SET_UP_CALL:
             TextMessage mesg = mCurrentCmd.getCallSettings().confirmMsg;
-            if((mesg != null) && (mesg.text == null || mesg.text.length() == 0)) {
+            if ((mesg != null) && (mesg.text == null || mesg.text.length() == 0)) {
                 mesg.text = getResources().getString(R.string.default_setup_call_msg);
             }
             CatLog.d(this, "SET_UP_CALL mesg.text " + mesg.text);
@@ -918,22 +934,11 @@ public class StkAppService extends Service {
                 }
                 break;
             case LAUNCH_BROWSER:
-                mBrowserSettings = mCurrentCmd.getBrowserSettings();
-                /* If Launch Browser mode is LAUNCH_IF_NOT_ALREADY_LAUNCHED
-                 * and if the browser is already launched then send the error
-                 * code and additional info indicating 'Browser Unavilable'(0x02)
-                 */
-                if ( (mBrowserSettings.mode == LaunchBrowserMode.LAUNCH_IF_NOT_ALREADY_LAUNCHED) &&
-                        confirmed && isBrowserLaunched(mContext)) {
-                    resMsg.setResultCode(ResultCode.LAUNCH_BROWSER_ERROR);
-                    resMsg.setAdditionalInfo(0x02);
-                    CatLog.d(this, "LAUNCH_BROWSER_ERROR - Browser_Unavailable");
-                } else {
-                    resMsg.setResultCode(confirmed ? ResultCode.OK
-                            : ResultCode.UICC_SESSION_TERM_BY_USER);
-                    if (confirmed) {
-                        launchBrowser = true;
-                    }
+                resMsg.setResultCode(confirmed ? ResultCode.OK
+                        : ResultCode.UICC_SESSION_TERM_BY_USER);
+                if (confirmed) {
+                    launchBrowser = true;
+                    mBrowserSettings = mCurrentCmd.getBrowserSettings();
                 }
                 break;
             case SET_UP_CALL:
@@ -1244,26 +1249,6 @@ public class StkAppService extends Service {
         try {
             Thread.sleep(10000);
         } catch (InterruptedException e) {}
-    }
-
-    private boolean isBrowserLaunched(Context context) {
-        int MAX_TASKS = 99;
-        ActivityManager mAcivityManager = (ActivityManager) context.
-                getSystemService(ACTIVITY_SERVICE);
-        if (mAcivityManager == null) return false;
-        List<RunningTaskInfo> mRunningTasksList = mAcivityManager.getRunningTasks(MAX_TASKS);
-        Iterator<RunningTaskInfo> mIterator = mRunningTasksList.iterator();
-        while (mIterator.hasNext()) {
-            RunningTaskInfo mRunningTask = mIterator.next();
-                if (mRunningTask != null) {
-                    ComponentName runningTaskComponent = mRunningTask.baseActivity;
-                    if (runningTaskComponent.getClassName().
-                            equals("com.android.browser.BrowserActivity")) {
-                        return true;
-                    }
-                }
-        }
-        return false;
     }
 
     private void launchIdleText() {
