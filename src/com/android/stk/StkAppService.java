@@ -1269,6 +1269,8 @@ public class StkAppService extends Service {
                     .setSmallIcon(com.android.internal.R.drawable.stat_notify_sim_toolkit);
             notificationBuilder.setContentIntent(pendingIntent);
             notificationBuilder.setOngoing(true);
+            notificationBuilder.setStyle(new Notification.BigTextStyle(notificationBuilder)
+                    .bigText(msg.text));
             // Set text and icon for the status bar and notification body.
             if (mIdleModeTextCmd.hasIconLoadFailed() || !msg.iconSelfExplanatory) {
                 notificationBuilder.setContentText(msg.text);
