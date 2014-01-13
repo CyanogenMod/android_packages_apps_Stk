@@ -724,6 +724,9 @@ public class StkAppService extends Service {
         case SEND_USSD:
         case GET_CHANNEL_STATUS:
             waitForUsersResponse = false;
+            //For UNSOL_STK_EVENT_NOTIFY, initialise the mCurrentCmd to point
+            //to SET_UP_MENU.
+            mCurrentCmd = mMainCmd;
             launchEventMessage();
             break;
         case REFRESH:
