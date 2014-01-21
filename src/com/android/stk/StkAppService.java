@@ -1469,7 +1469,6 @@ public class StkAppService extends Service {
         mIsWaitingOnScreenStatus = false;
         mScreenIdle = true;
         mMainMenu = null;
-        mCurrentSlotId = 0;
         mClearSelectItem = false;
         mDisplayTextDlgIsVisibile = false;
         mMenuIsVisibile = false;
