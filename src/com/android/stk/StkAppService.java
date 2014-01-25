@@ -452,6 +452,8 @@ public class StkAppService extends Service {
                 if (mMainCmd == null) {
                     StkAppInstaller.unInstall(mContext, mCurrentSlotId);
                 }
+                mStkService[mCurrentSlotId].onStkAppReady();
+                CatLog.d(this, "Notified BOOT_COMPLETE to CatService");
                 break;
             case OP_DELAYED_MSG:
                 handleDelayedCmd();
