@@ -19,9 +19,9 @@
     <!-- Default Application label used on home screen with an icon -->
     <string name="app_name">SIM Toolkit</string>
     <!-- Application label used on home screen with an icon2 -->
-    <string name="app_name2">SIM Toolkit2</string>
+    <string name="app_name2">SIM Toolkit 2</string>
     <!-- Application label used on home screen with an icon3 -->
-    <string name="app_name3">SIM Toolkit3</string>
+    <string name="app_name3">SIM Toolkit 3</string>
     <!-- Menu button option for ending current SIM session -->
     <string name="menu_end_session">End session</string>
     <!-- Menu button option for requesting additional help information -->
@@ -47,7 +47,7 @@
     <!-- Default transition message when launching a call -->
     <string name="default_call_setup_msg">Call in progress\u2026</string>
     <!-- Default message for SET_UP_CALL when there is no ALPHA tag in it -->
-    <string name="default_setup_call_msg">Call being setup</string>
+    <string name="default_setup_call_msg">Call is being setup\u2026</string>
 
     <string name="stk_app_state">Application state</string>
     <string name="enable_app">Enabled</string>
