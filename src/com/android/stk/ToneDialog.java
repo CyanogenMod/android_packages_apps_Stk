@@ -19,11 +19,13 @@
 package com.android.stk;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.os.Vibrator;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -31,46 +33,25 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.internal.telephony.cat.TextMessage;
-import com.android.internal.telephony.cat.ToneSettings;
+import com.android.internal.telephony.cat.CatLog;
 
 /**
- * Activity used for PLAY TONE command.
+ * Activity used to display tone dialog.
  *
  */
 public class ToneDialog extends Activity {
     TextMessage toneMsg = null;
-    ToneSettings settings = null;
-    TonePlayer player = null;
-    boolean mIsResponseSent = false;
     private int mSlotId = 0;
-
-    /**
-     * Handler used to stop tones from playing when the duration ends.
-     */
-    Handler mToneStopper = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-            case MSG_ID_STOP_TONE:
-                sendResponse(StkAppService.RES_ID_DONE);
-                finish();
-                break;
-            }
-        }
-    };
-
-    Vibrator mVibrator;
-
-    // Message id to signal tone duration timeout.
-    private static final int MSG_ID_STOP_TONE = 0xda;
 
     @Override
     protected void onCreate(Bundle icicle) {
         super.onCreate(icicle);
 
-        mVibrator = (Vibrator)getSystemService(VIBRATOR_SERVICE);
-
         initFromIntent(getIntent());
+        // Register receiver
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(StkAppService.FINISH_TONE_ACTIVITY_ACTION);
+        registerReceiver(mFinishActivityReceiver, filter);
 
         // remove window title
         View title = findViewById(com.android.internal.R.id.title);
@@ -89,35 +70,20 @@ public class ToneDialog extends Activity {
             iv.setImageBitmap(toneMsg.icon);
         }
 
-        // Start playing tone and vibration
-        player = new TonePlayer();
-        player.play(settings.tone);
-        int timeout = StkApp.calculateDurationInMilis(settings.duration);
-        if (timeout == 0) {
-            timeout = StkApp.TONE_DFEAULT_TIMEOUT;
-        }
-        mToneStopper.sendEmptyMessageDelayed(MSG_ID_STOP_TONE, timeout);
-        if (settings.vibrate) {
-            mVibrator.vibrate(timeout);
-        }
     }
 
     @Override
     protected void onDestroy() {
+        // Unregister receiver
+        unregisterReceiver(mFinishActivityReceiver);
         super.onDestroy();
-        if (mIsResponseSent) {
-            mToneStopper.removeMessages(MSG_ID_STOP_TONE);
-        }
-        player.stop();
-        player.release();
-        mVibrator.cancel();
     }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         switch (keyCode) {
         case KeyEvent.KEYCODE_BACK:
-            sendResponse(StkAppService.RES_ID_END_SESSION);
+            sendStopTone();
             finish();
             break;
         }
@@ -128,28 +94,38 @@ public class ToneDialog extends Activity {
     public boolean onTouchEvent(MotionEvent event) {
         switch (event.getAction()) {
         case MotionEvent.ACTION_DOWN:
-            sendResponse(StkAppService.RES_ID_END_SESSION);
+            sendStopTone();
             finish();
             return true;
         }
         return super.onTouchEvent(event);
     }
 
+    private BroadcastReceiver mFinishActivityReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            // Intent received from StkAppService to finish ToneDialog activity,
+            // after finishing off playing the tone.
+            if (intent.getAction().equals(StkAppService.FINISH_TONE_ACTIVITY_ACTION)) {
+                CatLog.d(this, "Finishing Tone dialog activity");
+                finish();
+            }
+        }
+    };
+
     private void initFromIntent(Intent intent) {
         if (intent == null) {
             finish();
         }
         toneMsg = intent.getParcelableExtra("TEXT");
-        settings = intent.getParcelableExtra("TONE");
         mSlotId = intent.getIntExtra(StkAppService.SLOT_ID, 0);
     }
 
-    private void sendResponse(int resId) {
+    // Send stop playing tone to StkAppService, when user presses back key.
+    private void sendStopTone() {
         Bundle args = new Bundle();
-        args.putInt(StkAppService.OPCODE, StkAppService.OP_RESPONSE);
-        args.putInt(StkAppService.RES_ID, resId);
+        args.putInt(StkAppService.OPCODE, StkAppService.OP_STOP_TONE_USER);
         args.putInt(StkAppService.SLOT_ID, mSlotId);
         startService(new Intent(this, StkAppService.class).putExtras(args));
-        mIsResponseSent = true;
     }
 }
