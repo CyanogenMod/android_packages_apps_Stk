@@ -16,8 +16,8 @@
      limitations under the License.
 -->
 <resources>
-  <string name="app_name2">SIM-toolkit 2</string>
-  <string name="app_name3">SIM-toolkit 3</string>
-  <string name="default_setup_call_msg">Gesprek wordt geïnitialiseerd</string>
-  <string name="default_tone_dialog_msg">Toon afspelen</string>
+  <string name="app_name2">Caixa de ferramentas do SIM 2</string>
+  <string name="app_name3">Caixa de ferramentas do SIM 3</string>
+  <string name="default_setup_call_msg">A chamada está a ser preparada\2026</string>
+  <string name="default_tone_dialog_msg">A tocar som</string>
 </resources>
