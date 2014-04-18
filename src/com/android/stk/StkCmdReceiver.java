@@ -46,6 +46,8 @@ public class StkCmdReceiver extends BroadcastReceiver {
             handleScreenStatus(context, intent.getBooleanExtra("SCREEN_IDLE",true));
         } else if (action.equals(Intent.ACTION_LOCALE_CHANGED)) {
             handleLocaleChange(context);
+        } else if (action.equals(AppInterface.CAT_HCI_CONNECTIVITY_ACTION)) {
+            handleHciConnectivity(context, intent);
         }
     }
 
@@ -105,5 +107,14 @@ public class StkCmdReceiver extends BroadcastReceiver {
         args.putString(AppInterface.ALPHA_STRING, alphaString);
         context.startService(new Intent(context, StkAppService.class)
                 .putExtras(args));
+    }
+
+    private void handleHciConnectivity(Context context, Intent intent) {
+       Bundle args =  new Bundle();
+       int slotId = intent.getIntExtra("SLOT_ID", 0);
+       args.putInt(StkAppService.SLOT_ID, slotId);
+       args.putInt(StkAppService.OPCODE, StkAppService.OP_HCI_CONNECTIVITY);
+       context.startService(new Intent(context, StkAppService.class)
+               .putExtras(args));
     }
 }
