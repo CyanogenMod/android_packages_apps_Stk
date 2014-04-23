@@ -388,8 +388,8 @@ public class StkInputActivity extends Activity implements View.OnClickListener,
             numOfCharsView.setText(lengthLimit);
 
             if (!mStkInput.echo) {
-                mTextIn.setInputType(InputType.TYPE_CLASS_NUMBER
-                                     | InputType.TYPE_NUMBER_VARIATION_PASSWORD);
+                mTextIn.setTransformationMethod(PasswordTransformationMethod
+                        .getInstance());
             }
             mTextIn.setImeOptions(EditorInfo.IME_FLAG_NO_FULLSCREEN);
             // Set default text if present.
