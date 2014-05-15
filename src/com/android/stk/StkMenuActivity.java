@@ -155,13 +155,19 @@ public class StkMenuActivity extends ListActivity {
             return;
         }
         displayMenu();
-        startTimeOut();
         // whenever this activity is resumed after a sub activity was invoked
         // (Browser, In call screen) switch back to main state and enable
         // user's input;
         if (!mAcceptUsersInput) {
             mState = STATE_MAIN;
             mAcceptUsersInput = true;
+        } else {
+            startTimeOutForSecondaryMenu();
+            /*
+             * Start the timer, only if state is SECONDARY. This will ensure
+             * that, there is no redundant timer, that can get triggered during
+             * the launch of back to back GET INPUT screens.
+             */
         }
         // make sure the progress bar is not shown.
         mProgressView.setIndeterminate(false);
@@ -262,7 +268,7 @@ public class StkMenuActivity extends ListActivity {
         mTimeoutHandler.removeMessages(MSG_ID_TIMEOUT);
     }
 
-    private void startTimeOut() {
+    private void startTimeOutForSecondaryMenu() {
         if (mState == STATE_SECONDARY) {
             // Reset timeout.
             cancelTimeOut();
