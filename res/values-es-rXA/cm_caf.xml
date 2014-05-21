@@ -15,7 +15,7 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-<resources>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
   <string name="app_name2">Servicios SIM 2</string>
   <string name="app_name3">Servicios SIM 3</string>
   <string name="default_setup_call_msg">La llamada ta configurándose\u2026</string>

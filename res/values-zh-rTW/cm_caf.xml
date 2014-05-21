@@ -15,7 +15,7 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-<resources>
-  <string name="app_name2">SIM 工具箱 2</string>
-  <string name="app_name3">SIM 工具箱 3</string>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+  <string name="app_name2">SIM 卡工具箱 2</string>
+  <string name="app_name3">SIM 卡工具箱 3</string>
 </resources>

@@ -15,9 +15,9 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-<resources>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
   <string name="app_name2">SIM-toolkit 2</string>
   <string name="app_name3">SIM-toolkit 3</string>
-  <string name="default_setup_call_msg">Gesprek wordt geïnitialiseerd</string>
+  <string name="default_setup_call_msg">Gesprek wordt geïnitialiseerd\u2026</string>
   <string name="default_tone_dialog_msg">Toon afspelen</string>
 </resources>

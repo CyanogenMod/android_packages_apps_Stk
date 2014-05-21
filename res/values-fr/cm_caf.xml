@@ -15,7 +15,7 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-<resources>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
   <string name="app_name2">Boîte à outil SIM 2</string>
   <string name="app_name3">Boîte à outil SIM 3</string>
   <string name="default_setup_call_msg">Appel en cours de configuration\u2026</string>

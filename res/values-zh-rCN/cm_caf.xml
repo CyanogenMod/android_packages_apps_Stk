@@ -15,7 +15,7 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-<resources>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
   <string name="app_name2">SIM 卡工具箱 2</string>
   <string name="app_name3">SIM 卡工具箱 3</string>
   <string name="default_setup_call_msg">拨号正在设置\u2026</string>

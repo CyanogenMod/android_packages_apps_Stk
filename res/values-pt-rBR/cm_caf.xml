@@ -15,7 +15,7 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-<resources>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
   <string name="app_name2">Ferramentas SIM 2</string>
   <string name="app_name3">Ferramentas SIM 3</string>
   <string name="default_setup_call_msg">Chamada está sendo configurada\u2026</string>
