@@ -16,8 +16,8 @@
      limitations under the License.
 -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-  <string name="app_name2">ئامرازەکانی سیمکارت 2</string>
-  <string name="app_name3">ئامرازەکانی سیمکارت 3</string>
-  <string name="default_setup_call_msg">پەیوەندی دادەمەزرێت لە\u2026</string>
-  <string name="default_tone_dialog_msg">لێدانی زەنگ</string>
+  <string name="app_name2">SIM zerbitzuak 2</string>
+  <string name="app_name3">SIM zerbitzuak 3</string>
+  <string name="default_setup_call_msg">Deia konfiguratua izaten ari da\u2026</string>
+  <string name="default_tone_dialog_msg">Doinua erreproduzitzen</string>
 </resources>
