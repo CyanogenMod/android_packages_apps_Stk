@@ -918,6 +918,10 @@ public class StkAppService extends Service implements Runnable {
         case GET_CHANNEL_STATUS:
             waitForUsersResponse = false;
             launchEventMessage(slotId);
+            //Reset the mCurrentCmd to mMainCmd, to avoid wrong TR sent for
+            //SEND_SMS/SS/USSD, when user launches STK app next time and do
+            //a menu selection.
+            mStkContext[slotId].mCurrentCmd = mStkContext[slotId].mMainCmd;
             break;
         case REFRESH:
             waitForUsersResponse = false;
