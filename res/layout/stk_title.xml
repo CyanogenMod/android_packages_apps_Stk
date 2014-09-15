@@ -18,6 +18,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
 	android:orientation="vertical"
+    android:layoutDirection="ltr"
 	android:fitsSystemWindows="true">
 
 	<LinearLayout android:id="@+id/stk_title"
@@ -36,10 +37,10 @@
 			<ImageView android:id="@+id/title_icon"
 				android:layout_width="16dip"
 				android:layout_height="16dip"
-				android:layout_marginLeft="2dip"
-				android:layout_marginRight="9dip"
+				android:layout_marginStart="2dip"
+				android:layout_marginEnd="9dip"
 	            android:layout_gravity="center_vertical"
-	            android:layout_alignParentLeft="true"
+	            android:layout_alignParentStart="true"
 				android:scaleType="fitCenter" />
 
 			<TextView android:id="@+id/title_text"
@@ -52,14 +53,14 @@
         <LinearLayout android:id="@+id/right_container"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:layout_centerVertical="true">
 
 	        <ProgressBar android:id="@+id/progress_bar"
 	                style="?android:attr/progressBarStyleSmallTitle"
 	                android:layout_width="wrap_content"
 	                android:layout_height="wrap_content"
-	                android:layout_marginLeft="5dip"
+	                android:layout_marginStart="5dip"
 	                android:layout_centerVertical="true"
 	                android:visibility="gone"
 	                android:max="10000" />
