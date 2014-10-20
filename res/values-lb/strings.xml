@@ -30,7 +30,7 @@
   <string name="default_call_setup_msg">Gespréich am Gaangen\u2026</string>
   <string name="stk_app_state">Status vun der Applikatioun</string>
   <string name="enable_app">Aktivéiert</string>
-  <string name="disable_app">Deaktivéiert</string>
+  <string name="disable_app">Desaktivéiert</string>
   <string name="stk_dialog_title">SIM-Geschirkëscht</string>
   <string name="default_open_channel_msg">Kanal opmaachen?</string>
   <string name="default_send_data_msg">Date gi geschéckt</string>
