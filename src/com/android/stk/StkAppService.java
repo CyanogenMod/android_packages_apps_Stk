@@ -211,7 +211,7 @@ public class StkAppService extends Service {
 
         updateCatService(slotId);
         if (mStkService[slotId] == null) {
-            stopSelf();
+            stopSelfIfRequired();
             CatLog.d(this, " Unable to get Service handle for slot" + slotId);
             StkAppInstaller.unInstall(mContext, slotId);
             return;
@@ -260,6 +260,17 @@ public class StkAppService extends Service {
         mServiceHandler[slotId].sendMessage(msg);
     }
 
+    private void stopSelfIfRequired() {
+        boolean isStopServiceRequired = true;
+        for (int i = 0; i < mSimCount; i++) {
+            if (mStkService[i] != null) {
+                isStopServiceRequired = false;
+                break;
+            }
+        }
+
+        if (isStopServiceRequired) stopSelf();
+    }
     private void InitHandlerThread() {
         for (int i = 0; i < mSimCount; i++) {
             mHandlerThread[i] = new HandlerThread("ServiceHandler" + i);
