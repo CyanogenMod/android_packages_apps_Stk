@@ -149,7 +149,7 @@ public class StkDialogActivity extends Activity implements View.OnClickListener 
         ImageView imageView = (ImageView) findViewById(R.id.icon);
         if (mTextMsg.icon == null) {
             imageView.setContentDescription(StkAppService.TEXT_DEFAULT_ICON);
-            imageView.setImageResource(com.android.internal.R.drawable.stat_notify_sim_toolkit);
+            imageView.setImageResource(R.drawable.ic_dialog_sim);
         } else {
             imageView.setContentDescription(StkAppService.TEXT_ICON_FROM_COMMAND + ": "
                     + mTextMsg.text);
