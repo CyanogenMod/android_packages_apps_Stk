@@ -136,7 +136,7 @@ public class StkDialogActivity extends Activity implements View.OnClickListener 
 
         if (mTextMsg.icon == null) {
             window.setFeatureDrawableResource(Window.FEATURE_LEFT_ICON,
-                    com.android.internal.R.drawable.stat_notify_sim_toolkit);
+                    R.drawable.ic_dialog_sim);
         } else {
             window.setFeatureDrawable(Window.FEATURE_LEFT_ICON,
                     new BitmapDrawable(mTextMsg.icon));
