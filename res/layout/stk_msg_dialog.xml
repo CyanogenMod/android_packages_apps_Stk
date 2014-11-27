@@ -23,22 +23,25 @@
 
     <LinearLayout android:id="@+id/titleBar"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:orientation="horizontal">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingTop="14dip"
+        android:paddingStart="14dip"
+        android:paddingEnd="19dip">
          <ImageView android:id="@+id/icon"
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="8dp"/>
+            android:layout_centerVertical="true" />
         <TextView
             android:id="@+id/title"
             android:layout_width="match_parent"
             style="?android:attr/textAppearanceMedium"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:padding="5dip"/>
+            android:paddingStart="10dip" />
     </LinearLayout>
+
     <LinearLayout android:id="@+id/messagePanel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
