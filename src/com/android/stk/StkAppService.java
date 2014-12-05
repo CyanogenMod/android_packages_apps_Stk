@@ -208,13 +208,24 @@ public class StkAppService extends Service {
         }
 
         int slotId = args.getInt(SLOT_ID);
+        int opCode = args.getInt(OPCODE);
 
         updateCatService(slotId);
-        if (mStkService[slotId] == null) {
-            stopSelfIfRequired();
-            CatLog.d(this, " Unable to get Service handle for slot" + slotId);
-            StkAppInstaller.unInstall(mContext, slotId);
-            return;
+
+        // Boot Complete and Idle screen notifications will not contain a
+        // slotId. If we receive a boot complete or idle screen intent or any other
+        // intent with a slotId for which the uicc card is absent/not ready,
+        // check and unistall the stk apps corresponding to all slotIds for which the card
+        // is absent/not ready. If all the cards are absent/not ready, stop the
+        // StkAppService and return. If not, continue processing the intent.
+        if ((opCode == OP_BOOT_COMPLETED) || (opCode == OP_IDLE_SCREEN) ||
+                (mStkService[slotId] == null) ) {
+            checkAndUnInstallStkApps();
+            if (isStopServiceRequired()) {
+                CatLog.d(this, "stopping StkAppService");
+                stopSelf();
+                return;
+            }
         }
 
         Message msg = mServiceHandler[slotId].obtainMessage();
@@ -260,17 +271,26 @@ public class StkAppService extends Service {
         mServiceHandler[slotId].sendMessage(msg);
     }
 
-    private void stopSelfIfRequired() {
-        boolean isStopServiceRequired = true;
+    private void checkAndUnInstallStkApps() {
+        for (int i = 0; i < mSimCount; i++) {
+            if (mStkService[i] == null) {
+                CatLog.d(this, " Unistalling Stk App for slot: " + i);
+                StkAppInstaller.unInstall(mContext, i);
+            }
+        }
+    }
+
+    private boolean isStopServiceRequired () {
+        boolean stopServiceRequired = true;
         for (int i = 0; i < mSimCount; i++) {
             if (mStkService[i] != null) {
-                isStopServiceRequired = false;
+                stopServiceRequired = false;
                 break;
             }
         }
-
-        if (isStopServiceRequired) stopSelf();
+        return stopServiceRequired;
     }
+
     private void InitHandlerThread() {
         for (int i = 0; i < mSimCount; i++) {
             mHandlerThread[i] = new HandlerThread("ServiceHandler" + i);
