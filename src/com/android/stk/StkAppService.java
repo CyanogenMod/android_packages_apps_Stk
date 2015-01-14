@@ -937,6 +937,18 @@ public class StkAppService extends Service implements Runnable {
                 }
             } else {
                 CatLog.d(LOG_TAG, "install App");
+                CatLog.d(LOG_TAG, "getResources().getBoolean(R.bool.send_stk_title ="
+                        + (getResources().getBoolean(R.bool.send_stk_title)));
+                if ((getResources().getBoolean(R.bool.send_stk_title))) {
+                    String stkTitle = mStkContext[slotId].mCurrentMenu.title;
+                    CatLog.d(LOG_TAG ,"mCurrentMenu.title =" + stkTitle);
+                    //Send intent with the extra to launcher
+                    final String STK_INTENT =
+                            "org.codeaurora.carrier.ACTION_TELEPHONY_SEND_STK_TITLE";
+                    Intent intent = new Intent(STK_INTENT);
+                    intent.putExtra("StkTitle", stkTitle);
+                    sendStickyBroadcast(intent);
+                }
                 StkAppInstaller.install(mContext);
             }
             if (mStkContext[slotId].mMenuIsVisible) {
