@@ -18,8 +18,13 @@
   <string name="app_name">دەزگای سیمکارت</string>
   <string name="menu_end_session">کۆتایی هینان بە پەیوەندیەکە</string>
   <string name="help">یارمەتی</string>
+  <string name="menu_back">دواوە</string>
   <string name="service_name">ناوی خزمەتگوزاری</string>
   <string name="stk_no_service">خزمەتگوزاری لە بەردەست نیە</string>
+  <string name="button_ok">باشه‌</string>
+  <string name="button_cancel">هەڵوەشاندنەوە</string>
+  <string name="button_yes">بەڵێ</string>
+  <string name="button_no">نا</string>
   <string name="alphabet">پیتەکەن</string>
   <string name="digits">ژمارەکان (0-9، *،+)</string>
   <string name="default_call_setup_msg">پەیوەندیەک لە ئارادایە\u2026</string>
