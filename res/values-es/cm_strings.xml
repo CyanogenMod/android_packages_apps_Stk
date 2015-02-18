@@ -21,4 +21,5 @@
   <string name="app_name3">Servicios SIM 3</string>
   <string name="default_setup_call_msg">La llamada está siendo configurada\u2026</string>
   <string name="default_tone_dialog_msg">Reproduciendo tono</string>
+  <string name="stk_intent_permission">Permitir intentos STK</string>
 </resources>
