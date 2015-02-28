@@ -21,4 +21,5 @@
   <string name="app_name3">SIM Toolkit 3</string>
   <string name="default_setup_call_msg">Opkald konfigureres\u2026</string>
   <string name="default_tone_dialog_msg">Afspiller lyd</string>
+  <string name="stk_intent_permission">Tillad STK-hensigter</string>
 </resources>
