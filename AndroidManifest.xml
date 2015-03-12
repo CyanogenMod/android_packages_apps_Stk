@@ -120,10 +120,10 @@
             </intent-filter>
         </receiver>
 
-        <receiver android:name="com.android.stk.BootCompletedReceiver"
-            androidprv:primaryUserOnly="true">
+        <receiver android:name="com.android.stk.BootCompletedReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.USER_INITIALIZE" />
             </intent-filter>
         </receiver>
 
