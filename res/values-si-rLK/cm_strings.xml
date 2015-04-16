@@ -19,6 +19,5 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
   <string name="app_name2">සිම් මෙවලම් මල්ල 2</string>
   <string name="app_name3">සිම් මෙවලම් මල්ල 3</string>
-  <string name="default_setup_call_msg">ඇමතුම පිහිටුවමින්\u2026</string>
   <string name="default_tone_dialog_msg">තානය වයමින්</string>
 </resources>

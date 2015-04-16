@@ -19,6 +19,5 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
   <string name="app_name2">SIM Toolkit 2</string>
   <string name="app_name3">SIM Toolkit 3</string>
-  <string name="default_setup_call_msg">Apelul este în curs de configurare\u2026</string>
   <string name="default_tone_dialog_msg">Ton de redare</string>
 </resources>

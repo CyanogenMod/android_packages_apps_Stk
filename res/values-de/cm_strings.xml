@@ -19,7 +19,6 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
   <string name="app_name2">SIM-Toolkit (SIM 2)</string>
   <string name="app_name3">SIM-Toolkit (SIM 3)</string>
-  <string name="default_setup_call_msg">Anruf wird aufgebaut\u2026</string>
   <string name="default_tone_dialog_msg">Ton wird abgespielt</string>
   <string name="stk_intent_permission">STK-Intents zulassen</string>
 </resources>

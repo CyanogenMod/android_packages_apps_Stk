@@ -19,7 +19,6 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
   <string name="app_name2">SIM комплет алата 2</string>
   <string name="app_name3">SIM комплет алата 3</string>
-  <string name="default_setup_call_msg">Позив ће бити подешен\u2026</string>
   <string name="default_tone_dialog_msg">Тон свирања</string>
   <string name="stk_intent_permission">Дозволи STK коришћење</string>
 </resources>

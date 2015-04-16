@@ -19,7 +19,6 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
   <string name="app_name2">Εργαλεία SIM 2</string>
   <string name="app_name3">Εργαλεία SIM 3</string>
-  <string name="default_setup_call_msg">Η κλήση αρχικοποιείται\u2026</string>
   <string name="default_tone_dialog_msg">Αναπαραγωγή ήχου</string>
   <string name="stk_intent_permission">Να επιτρέπονται intents STK</string>
 </resources>

@@ -19,7 +19,6 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
   <string name="app_name2">Zestaw narzędzi SIM 2</string>
   <string name="app_name3">Zestaw narzędzi SIM 3</string>
-  <string name="default_setup_call_msg">Połączenie jest przygotowywane\u2026</string>
   <string name="default_tone_dialog_msg">Odtwórz dźwięk</string>
   <string name="stk_intent_permission">Zezwól na STK</string>
 </resources>

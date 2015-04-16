@@ -19,7 +19,6 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
   <string name="app_name2">Меню SIM-карты 2</string>
   <string name="app_name3">Меню SIM-карты 3</string>
-  <string name="default_setup_call_msg">Выполняется вызов\u2026</string>
   <string name="default_tone_dialog_msg">Воспроизведение звука</string>
   <string name="stk_intent_permission">Разрешить взаимодействие с STK</string>
 </resources>

@@ -21,9 +21,6 @@
     <!-- Application label used on home screen with an icon3 -->
     <string name="app_name3">SIM Toolkit 3</string>
 
-    <!-- Default message for SET_UP_CALL when there is no ALPHA tag in it -->
-    <string name="default_setup_call_msg">Call is being setup\u2026</string>
-
     <!-- Default message when no alpha tag in Play Tone -->
     <string name="default_tone_dialog_msg">Playing Tone</string>
 

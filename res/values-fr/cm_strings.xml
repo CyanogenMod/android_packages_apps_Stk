@@ -19,7 +19,6 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
   <string name="app_name2">Boîte à outils SIM 2</string>
   <string name="app_name3">Boîte à outils SIM 3</string>
-  <string name="default_setup_call_msg">Appel en cours de configuration\u2026</string>
   <string name="default_tone_dialog_msg">Jouer un son</string>
   <string name="stk_intent_permission">Autoriser les opérations STK</string>
 </resources>

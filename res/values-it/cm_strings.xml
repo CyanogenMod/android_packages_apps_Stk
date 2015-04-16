@@ -19,7 +19,6 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
   <string name="app_name2">Kit strumenti SIM 2</string>
   <string name="app_name3">Kit strumenti SIM 3</string>
-  <string name="default_setup_call_msg">La chiamata è in configurazione\u2026</string>
   <string name="default_tone_dialog_msg">Riproduzione tono</string>
   <string name="stk_intent_permission">Consentire gli intent STK</string>
 </resources>

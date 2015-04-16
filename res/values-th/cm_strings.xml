@@ -19,6 +19,5 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
   <string name="app_name2">อุปกรณ์จัดการซิม2</string>
   <string name="app_name3">อุปกรณ์จัดการซิม3</string>
-  <string name="default_setup_call_msg">กำลังเตรียมสาย\u2026</string>
   <string name="default_tone_dialog_msg">เล่นเสียงเรียกเข้า</string>
 </resources>

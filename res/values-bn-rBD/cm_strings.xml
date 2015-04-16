@@ -19,6 +19,5 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
   <string name="app_name2">সিম টুলকিট ২</string>
   <string name="app_name3">সিম টুলকিট ৩</string>
-  <string name="default_setup_call_msg">কল\u2026 প্রস্তুত করা হচ্ছে</string>
   <string name="default_tone_dialog_msg">টোন বাজানো হচ্ছে</string>
 </resources>
