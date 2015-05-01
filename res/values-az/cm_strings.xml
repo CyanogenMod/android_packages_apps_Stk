@@ -19,4 +19,6 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
   <string name="app_name2">SIM Alət dəsti 2</string>
   <string name="app_name3">SIM Alət dəsti 3</string>
+  <string name="default_setup_call_msg">Zəng tənzimlənir\u2026</string>
+  <string name="default_tone_dialog_msg">Çalma Tonu</string>
 </resources>
