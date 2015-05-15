@@ -17,8 +17,6 @@
      limitations under the License.
 -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-  <string name="app_name2">SIM 툴킷 2</string>
-  <string name="app_name3">SIM 툴킷 3</string>
   <string name="default_tone_dialog_msg">톤 재생</string>
   <string name="stk_intent_permission">STK 시도 허가</string>
 </resources>

@@ -17,7 +17,6 @@
      limitations under the License.
 -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-  <string name="app_name2">อุปกรณ์จัดการซิม2</string>
-  <string name="app_name3">อุปกรณ์จัดการซิม3</string>
   <string name="default_tone_dialog_msg">เล่นเสียงเรียกเข้า</string>
+  <string name="stk_intent_permission">อนุญาต STK intents</string>
 </resources>
