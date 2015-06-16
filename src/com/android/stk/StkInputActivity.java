@@ -33,6 +33,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.EditText;
 import android.widget.TextView.BufferType;
@@ -135,7 +136,8 @@ public class StkInputActivity extends Activity implements View.OnClickListener,
         CatLog.d(LOG_TAG, "onCreate - mIsResponseSent[" + mIsResponseSent + "]");
 
         // Set the layout for this activity.
-        requestWindowFeature(Window.FEATURE_LEFT_ICON);
+        // Disable the title for Window. We will set the title later in the layout.
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.stk_input);
 
         // Initialize members
@@ -366,9 +368,11 @@ public class StkInputActivity extends Activity implements View.OnClickListener,
         }
         inTypeView.setText(inTypeId);
 
+        ImageView imageView = (ImageView) findViewById(R.id.icon);
         if (mStkInput.icon != null) {
-            setFeatureDrawable(Window.FEATURE_LEFT_ICON, new BitmapDrawable(
-                    mStkInput.icon));
+            imageView.setContentDescription(StkAppService.TEXT_ICON_FROM_COMMAND + ": "
+                    + mStkInput.text);
+            imageView.setImageBitmap(mStkInput.icon);
         }
 
         // Handle specific global and text attributes.

@@ -34,6 +34,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 /**
@@ -73,8 +74,8 @@ public class StkDialogActivity extends Activity implements View.OnClickListener 
         // New Dialog is created - set to no response sent
         mIsResponseSent = false;
 
-        requestWindowFeature(Window.FEATURE_LEFT_ICON);
-
+        // Disable the title for Window. We will set the title later in the layout.
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.stk_msg_dialog);
 
         Button okButton = (Button) findViewById(R.id.button_ok);
@@ -138,18 +139,21 @@ public class StkDialogActivity extends Activity implements View.OnClickListener 
         TextView mMessageView = (TextView) window
                 .findViewById(R.id.dialog_message);
 
-        setTitle(mTextMsg.title);
+        TextView titleView = (TextView) window.findViewById(R.id.title);
+        titleView.setText(mTextMsg.title);
 
         if (!(mTextMsg.iconSelfExplanatory && mTextMsg.icon != null)) {
             mMessageView.setText(mTextMsg.text);
         }
 
+        ImageView imageView = (ImageView) findViewById(R.id.icon);
         if (mTextMsg.icon == null) {
-            window.setFeatureDrawableResource(Window.FEATURE_LEFT_ICON,
-                    com.android.internal.R.drawable.stat_notify_sim_toolkit);
+            imageView.setContentDescription(StkAppService.TEXT_DEFAULT_ICON);
+            imageView.setImageResource(com.android.internal.R.drawable.stat_notify_sim_toolkit);
         } else {
-            window.setFeatureDrawable(Window.FEATURE_LEFT_ICON,
-                    new BitmapDrawable(mTextMsg.icon));
+            imageView.setContentDescription(StkAppService.TEXT_ICON_FROM_COMMAND + ": "
+                    + mTextMsg.text);
+            imageView.setImageBitmap(mTextMsg.icon);
         }
 
         /*

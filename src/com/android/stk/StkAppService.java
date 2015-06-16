@@ -255,6 +255,10 @@ public class StkAppService extends Service implements Runnable {
     // system property to set the STK specific default url for launch browser proactive cmds
     private static final String STK_BROWSER_DEFAULT_URL_SYSPROP = "persist.radio.stk.default_url";
 
+    // Description of the Icon that is being dispalyed in a Stk activity.
+    public static final String TEXT_DEFAULT_ICON = "Stk Default Icon";
+    public static final String TEXT_ICON_FROM_COMMAND="Stk Icon from Command";
+
     @Override
     public void onCreate() {
         CatLog.d(LOG_TAG, "onCreate()+");
@@ -1440,6 +1444,7 @@ public class StkAppService extends Service implements Runnable {
         ImageView iv = (ImageView) v
                 .findViewById(com.android.internal.R.id.icon);
         if (msg.icon != null) {
+            iv.setContentDescription(TEXT_ICON_FROM_COMMAND);
             iv.setImageBitmap(msg.icon);
         } else {
             iv.setVisibility(View.GONE);
