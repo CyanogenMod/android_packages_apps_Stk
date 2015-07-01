@@ -17,5 +17,6 @@
      limitations under the License.
 -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+  <string name="default_tone_dialog_msg">Ludi tonon</string>
   <string name="stk_intent_permission">Permesi STK operaciojn</string>
 </resources>
