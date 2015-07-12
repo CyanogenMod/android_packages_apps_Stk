@@ -28,6 +28,7 @@
   <string name="alphabet">Buschtawen</string>
   <string name="digits">Zifferen (0-9, *, #, +)</string>
   <string name="default_call_setup_msg">Gespréich am Gaangen\u2026</string>
+  <string name="default_setup_call_msg">Uruff gëtt ageriicht</string>
   <string name="stk_app_state">Status vun der Applikatioun</string>
   <string name="enable_app">Aktivéiert</string>
   <string name="disable_app">Desaktivéiert</string>
@@ -38,4 +39,5 @@
   <string name="default_close_channel_msg">Kanal zougemaach</string>
   <string name="stk_dialog_accept">JO</string>
   <string name="stk_dialog_reject">NEE</string>
+  <string name="no_sim_card_inserted">Maach w.e.g. eng SIM-Kaart dran, fir d\'SIM-Geschirkëscht ze starten.</string>
 </resources>
