@@ -96,7 +96,6 @@ public class StkAppService extends Service {
     private Context mContext = null;
     private NotificationManager mNotificationManager = null;
     private HandlerThread[] mHandlerThread;
-    private boolean[] mStkPresent;
     private int mSimCount = TelephonyManager.getDefault().getSimCount();
     static StkAppService sInstance = null;
 
@@ -183,7 +182,6 @@ public class StkAppService extends Service {
         mStkService = new AppInterface[mSimCount];
         mHandlerThread = new HandlerThread[mSimCount];
         mServiceHandler = new ServiceHandler[mSimCount];
-        mStkPresent = new boolean[mSimCount];
 
         mContext = getBaseContext();
         InitHandlerThread();
@@ -277,7 +275,7 @@ public class StkAppService extends Service {
         for (int i = 0; i < mSimCount; i++) {
             if (mStkService[i] == null) {
                 CatLog.d(this, " Unistalling Stk App for slot: " + i);
-                unInstallStkApp(i);
+                StkAppInstaller.unInstall(mContext, i);
             }
         }
     }
@@ -311,30 +309,6 @@ public class StkAppService extends Service {
             } catch (Exception ex) {
                 CatLog.d(this, "UICC Interface not ready yet.");
             }
-        }
-    }
-
-    private void installStkApp(int slotId) {
-        mStkPresent[slotId] = true;
-        updateStkApp();
-    }
-
-    private void unInstallStkApp(int slotId) {
-        mStkPresent[slotId] = false;
-        updateStkApp();
-    }
-
-    private void updateStkApp() {
-        boolean install = false;
-        for (int i = 0; i < mSimCount; i++) {
-            if (mStkPresent[i]) {
-                install = true;
-            }
-        }
-        if (install) {
-            StkAppInstaller.install(mContext);
-        } else {
-            StkAppInstaller.unInstall(mContext);
         }
     }
 
@@ -522,7 +496,7 @@ public class StkAppService extends Service {
             case OP_BOOT_COMPLETED:
                 CatLog.d(this, "OP_BOOT_COMPLETED");
                 if (mMainCmd == null) {
-                    unInstallStkApp(mCurrentSlotId);
+                    StkAppInstaller.unInstall(mContext, mCurrentSlotId);
                 }
                 break;
             case OP_DELAYED_MSG:
@@ -561,7 +535,7 @@ public class StkAppService extends Service {
             if (cardStatus == false) {
                 CatLog.d(this, "CARD is ABSENT");
                 // Uninstall STKAPP, Clear Idle text, Menu related variables.
-                unInstallStkApp(mCurrentSlotId);
+                StkAppInstaller.unInstall(mContext, mCurrentSlotId);
                 mNotificationManager.cancel(STK_NOTIFICATION_ID);
                 mStkService[mCurrentSlotId] = null;
                 cleanUp();
@@ -578,7 +552,7 @@ public class StkAppService extends Service {
 
                 if (state.refreshResult == IccRefreshResponse.REFRESH_RESULT_RESET) {
                     // Uninstall STkmenu
-                    unInstallStkApp(mCurrentSlotId);
+                    StkAppInstaller.unInstall(mContext, mCurrentSlotId);
                     mCurrentMenu = null;
                     mMainCmd = null;
                 }
@@ -771,10 +745,10 @@ public class StkAppService extends Service {
                 CatLog.d(this, "Uninstall App");
                 mCurrentMenu = null;
                 mMainCmd = null;
-                unInstallStkApp(mCurrentSlotId);
+                StkAppInstaller.unInstall(mContext, mCurrentSlotId);
             } else {
                 CatLog.d(this, "Install App");
-                installStkApp(mCurrentSlotId);
+                StkAppInstaller.install(mContext, mCurrentSlotId);
             }
             mMainMenu = mCurrentMenu;
             if (mMenuIsVisibile) {
