@@ -39,24 +39,33 @@
         android:supportsRtl="true"
         android:process="com.android.phone">
 
-        <activity android:name="StkMain"
-            android:theme="@android:style/Theme.NoDisplay"
+        <activity android:name="StkLauncherActivity"
             android:label="@string/app_name"
-            android:enabled="false"
-            android:taskAffinity="android.task.stk.StkLauncherActivity">
+            android:taskAffinity="android.task.StkLauncherActivity"
+            android:enabled="false">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <activity android:name="StkLauncherActivity"
-            android:label="@string/app_name"
-            android:taskAffinity="android.task.stk.StkLauncherActivity">
+        <activity android:name="StkLauncherActivity2"
+            android:label="@string/app_name2"
+            android:taskAffinity="android.task.StkLauncherActivity2"
+            android:enabled="false" >
             <intent-filter>
-                 <action android:name="android.intent.action.VIEW" />
-                 <action android:name="android.intent.action.PICK" />
-                 <category android:name="android.intent.category.DEFAULT" />
+                 <action android:name="android.intent.action.MAIN" />
+                 <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity android:name="StkLauncherActivity3"
+            android:label="@string/app_name3"
+            android:taskAffinity="android.task.StkLauncherActivity3"
+            android:enabled="false" >
+            <intent-filter>
+                 <action android:name="android.intent.action.MAIN" />
+                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
