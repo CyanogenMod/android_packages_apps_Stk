@@ -17,6 +17,8 @@
      limitations under the License.
 -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+  <string name="app_name2">SIM-työkalut 2</string>
+  <string name="app_name3">SIM-työkalut 3</string>
   <string name="default_tone_dialog_msg">Soitetaan ääni</string>
   <string name="stk_intent_permission">Salli STK päätökset</string>
 </resources>

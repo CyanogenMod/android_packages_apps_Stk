@@ -17,6 +17,8 @@
      limitations under the License.
 -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+  <string name="app_name2">Ferramentas do SIM 2</string>
+  <string name="app_name3">Ferramentas do SIM 3</string>
   <string name="default_tone_dialog_msg">Tocando Tom</string>
   <string name="stk_intent_permission">Permitir operações STK</string>
 </resources>
