@@ -17,8 +17,8 @@
      limitations under the License.
 -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-  <string name="app_name2">SIM Eszköztár 2</string>
-  <string name="app_name3">SIM Eszköztár 3</string>
-  <string name="default_tone_dialog_msg">Hang lejátszása</string>
-  <string name="stk_intent_permission">STK leképezések engedélyezése</string>
+  <string name="app_name2">ಸಿಮ್ ಟೋಲ್‍ಕಿಟ್ 2</string>
+  <string name="app_name3">ಸಿಮ್ ಟೋಲ್‍ಕಿಟ್ 3</string>
+  <string name="default_tone_dialog_msg">ಟೋನ್ ಪ್ಲೇ ಆಗುತ್ತಿದೆ</string>
+  <string name="stk_intent_permission">STK ಇಂಟೆಂಟ್‍ಗಳನ್ನು ಅನುಮತಿಸಿ</string>
 </resources>

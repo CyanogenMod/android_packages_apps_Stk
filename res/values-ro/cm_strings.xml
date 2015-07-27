@@ -17,5 +17,7 @@
      limitations under the License.
 -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+  <string name="app_name2">SIM Toolkit 2</string>
+  <string name="app_name3">SIM Toolkit 3</string>
   <string name="default_tone_dialog_msg">Ton de redare</string>
 </resources>
