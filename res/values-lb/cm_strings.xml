@@ -17,6 +17,8 @@
      limitations under the License.
 -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+  <string name="app_name2">SIM-Geschirkëscht 2</string>
+  <string name="app_name3">SIM-Geschirkëscht 3</string>
   <string name="default_tone_dialog_msg">Toun gëtt ofgespillt</string>
   <string name="stk_intent_permission">STK-Operatiounen erlaben</string>
 </resources>
