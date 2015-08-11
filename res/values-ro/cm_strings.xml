@@ -20,4 +20,5 @@
   <string name="app_name2">SIM Toolkit 2</string>
   <string name="app_name3">SIM Toolkit 3</string>
   <string name="default_tone_dialog_msg">Ton de redare</string>
+  <string name="stk_intent_permission">Permite intențiile STK</string>
 </resources>
