@@ -17,8 +17,8 @@
      limitations under the License.
 -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-  <string name="app_name2">جعبه ابزار سیمکارت 2</string>
-  <string name="app_name3">جعبه ابزار سیمکارت 3</string>
-  <string name="default_tone_dialog_msg">نواختن تن</string>
+  <string name="app_name2">جعبه ابزار سیم کارت ۲</string>
+  <string name="app_name3">جعبه ابزار سیم کارت ۳</string>
+  <string name="default_tone_dialog_msg">اجرای تن</string>
   <string name="stk_intent_permission">اجازه به الزامات STK</string>
 </resources>
