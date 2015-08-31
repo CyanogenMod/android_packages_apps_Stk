@@ -31,6 +31,12 @@ import android.content.pm.PackageManager;
 abstract class StkAppInstaller {
     private StkAppInstaller() {}
 
+    static String[] launcherActivity = {
+        "com.android.stk.StkLauncherActivity",
+        "com.android.stk.StkLauncherActivity2",
+        "com.android.stk.StkLauncherActivity3"
+    };
+
     static void install(Context context, int slotId) {
         setAppState(context, true, slotId);
     }
@@ -48,11 +54,6 @@ abstract class StkAppInstaller {
             return;
         }
         ComponentName cName;
-        String[] launcherActivity = {
-            "com.android.stk.StkLauncherActivity",
-            "com.android.stk.StkLauncherActivity2",
-            "com.android.stk.StkLauncherActivity3"
-        };
         // check that STK app package is known to the PackageManager
         cName = new ComponentName("com.android.stk",
                     launcherActivity[slotId]);
