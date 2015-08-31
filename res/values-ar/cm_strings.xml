@@ -17,8 +17,6 @@
      limitations under the License.
 -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-  <string name="app_name2">مجموعة أدوات SIM 2</string>
-  <string name="app_name3">مجموعة أدوات SIM 3</string>
   <string name="default_tone_dialog_msg">تشغيل النغمة</string>
   <string name="stk_intent_permission">السماح بأهداف STK</string>
 </resources>
