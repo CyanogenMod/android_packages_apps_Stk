@@ -30,7 +30,7 @@
     </permission>
 
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    <uses-permission android:name="android.permission.GET_TASKS"/>
+    <uses-permission android:name="android.permission.REAL_GET_TASKS"/>
     <uses-permission android:name="android.permission.SEND_RECEIVE_STK_INTENT"/>
     <uses-permission android:name="android.permission.RECEIVE_STK_COMMANDS" />
 
