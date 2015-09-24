@@ -17,6 +17,8 @@
      limitations under the License.
 -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+  <string name="app_name2">SIM 卡工具箱 2</string>
+  <string name="app_name3">SIM 卡工具箱 3</string>
   <string name="default_tone_dialog_msg">正在播放鈴聲</string>
   <string name="stk_intent_permission">允許 STK 目的</string>
 </resources>
