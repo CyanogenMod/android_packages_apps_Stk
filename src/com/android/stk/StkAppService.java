@@ -1713,7 +1713,7 @@ public class StkAppService extends Service implements Runnable {
 
         Message msg = mServiceHandler.obtainMessage();
         msg.arg1 = OP_STOP_TONE;
-        msg.arg2 = (showUserInfo) ? 1 : 0;
+        msg.obj = (Integer)(showUserInfo ? 1 : 0);
         msg.what = STOP_TONE_WHAT;
         mServiceHandler.sendMessageDelayed(msg, timeout);
         if (settings.vibrate) {
@@ -1745,13 +1745,14 @@ public class StkAppService extends Service implements Runnable {
     private void handleStopTone(Message msg, int slotId) {
         int resId = 0;
 
-        // Stop the play tone in following cases,
+        // Stop the play tone in following cases:
         // 1.OP_STOP_TONE: play tone timer expires.
         // 2.STOP_TONE_USER: user pressed the back key.
         if (msg.arg1 == OP_STOP_TONE) {
             resId = RES_ID_DONE;
             // Dismiss Tone dialog, after finishing off playing the tone.
-            if (msg.arg2 == 1) finishToneDialogActivity();
+            int finishActivity = (Integer) msg.obj;
+            if (finishActivity == 1) finishToneDialogActivity();
         } else if (msg.arg1 == OP_STOP_TONE_USER) {
             resId = RES_ID_END_SESSION;
         }
