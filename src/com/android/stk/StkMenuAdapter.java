@@ -60,6 +60,8 @@ public class StkMenuAdapter extends ArrayAdapter<Item> {
         } else {
             imageView.setImageBitmap(item.icon);
             imageView.setVisibility(View.VISIBLE);
+            // Add content description for the icon.
+            imageView.setContentDescription(StkAppService.TEXT_ICON_FROM_COMMAND);
         }
 
         return convertView;
