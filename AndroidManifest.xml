@@ -34,7 +34,7 @@
     <uses-permission android:name="android.permission.RECEIVE_STK_COMMANDS" />
     <uses-permission android:name="android.permission.SEND_RECEIVE_STK_INTENT"/>
 
-    <application android:icon="@drawable/ic_launcher_sim_toolkit"
+    <application android:icon="@mipmap/ic_launcher_sim_toolkit"
         android:label="@string/app_name"
         android:clearTaskOnLaunch="true"
         android:process="com.android.phone"
@@ -68,7 +68,7 @@
 
         <activity android:name="StkMenuActivity"
             android:theme="@android:style/Theme.NoTitleBar"
-            android:icon="@drawable/ic_launcher_sim_toolkit"
+            android:icon="@mipmap/ic_launcher_sim_toolkit"
             android:label="@string/app_name"
             android:configChanges="orientation|locale|screenSize|keyboardHidden|mnc|mcc"
             android:exported="false"
@@ -82,7 +82,7 @@
 
         <activity android:name="StkInputActivity"
             android:label="@string/app_name"
-            android:icon="@drawable/ic_launcher_sim_toolkit"
+            android:icon="@mipmap/ic_launcher_sim_toolkit"
             android:theme="@android:style/Theme.Holo"
             android:configChanges="orientation|locale|screenSize|keyboardHidden"
             android:exported="false"
