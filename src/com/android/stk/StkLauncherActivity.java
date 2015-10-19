@@ -68,7 +68,7 @@ public class StkLauncherActivity extends ListActivity {
         mTitleIconView = (ImageView) findViewById(R.id.title_icon);
         mTitleTextView.setText(R.string.app_name);
         mBitMap = BitmapFactory.decodeResource(getResources(),
-                R.drawable.ic_launcher_sim_toolkit);
+                R.mipmap.ic_launcher_sim_toolkit);
     }
 
     @Override
