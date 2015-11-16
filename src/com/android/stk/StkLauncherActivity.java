@@ -164,11 +164,16 @@ public class StkLauncherActivity extends ListActivity {
         String stkItemName = null;
         int simCount = TelephonyManager.from(mContext).getSimCount();
         mStkMenuList = new ArrayList<Item>();
+        StkAppService appService = StkAppService.getInstance();
 
         CatLog.d(LOG_TAG, "simCount: " + simCount);
         for (int i = 0; i < simCount; i++) {
             //Check if the card is inserted.
             if (mTm.hasIccCard(i)) {
+                if(appService == null || appService.getMainMenu(i) == null) {
+                    CatLog.d(LOG_TAG, "SIM " + i + " main menu of STK in the card is null");
+                    continue;
+                }
                 CatLog.d(LOG_TAG, "SIM " + i + " add to menu.");
                 mSingleSimId = i;
                 stkItemName = new StringBuilder(appName).append(" ")
