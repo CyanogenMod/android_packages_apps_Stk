@@ -17,8 +17,8 @@
      limitations under the License.
 -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-  <string name="app_name2">Bộ công cụ SIM 2</string>
-  <string name="app_name3">Bộ công cụ SIM 3</string>
+  <string name="app_name2">STK 2</string>
+  <string name="app_name3">STK 3</string>
   <string name="default_tone_dialog_msg">Giai điệu đang phát</string>
   <string name="stk_intent_permission">Cho phép ý định STK</string>
 </resources>
