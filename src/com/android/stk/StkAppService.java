@@ -31,6 +31,8 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.content.res.Resources.NotFoundException;
@@ -706,8 +708,19 @@ public class StkAppService extends Service implements Runnable {
         String currentPackageName = mAcivityManager.getRunningTasks(1).get(0).topActivity
                 .getPackageName();
         CatLog.d(this, "isScreenIdle, package name : " + currentPackageName);
+        final Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
+        mainIntent.addCategory(Intent.CATEGORY_HOME);
+        PackageManager pm = mContext.getPackageManager();
+
         if (null != currentPackageName) {
-            return currentPackageName.equals(PACKAGE_NAME_HOME_SCREEN);
+            List<ResolveInfo> actList = pm.queryIntentActivities(mainIntent, 0);
+            for (int i = 0; i < actList.size(); i++) {
+                ResolveInfo info = actList.get(i);
+
+                if (currentPackageName.equals(info.activityInfo.packageName)) {
+                    return true;
+                }
+            }
         }
 
         return false;
