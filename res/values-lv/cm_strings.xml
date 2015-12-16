@@ -17,6 +17,8 @@
      limitations under the License.
 -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+  <string name="app_name2">2. SIM rīkkopa</string>
+  <string name="app_name3">3. SIM rīkkopa</string>
   <string name="default_tone_dialog_msg">Atskaņo signālu</string>
   <string name="stk_intent_permission">Atļaut STK nolūkus</string>
 </resources>
