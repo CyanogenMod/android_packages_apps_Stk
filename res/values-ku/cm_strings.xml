@@ -17,5 +17,7 @@
      limitations under the License.
 -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+  <string name="app_name2">ئامرازەکانی سیمکارت ٢</string>
+  <string name="app_name3">ئامرازەکانی سیمکارت ٣</string>
   <string name="default_tone_dialog_msg">لێدانی زەنگ</string>
 </resources>
