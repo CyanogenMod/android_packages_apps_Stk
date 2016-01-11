@@ -17,6 +17,5 @@
      limitations under the License.
 -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-  <string name="default_tone_dialog_msg">تشغيل النغمة</string>
-  <string name="stk_intent_permission">السماح بأهداف STK</string>
+  <string name="default_tone_dialog_msg">Ton Produciranja</string>
 </resources>
