@@ -17,5 +17,6 @@
      limitations under the License.
 -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-  <string name="default_tone_dialog_msg">Ton Produciranja</string>
+  <string name="default_tone_dialog_msg">Ton produciranja</string>
+  <string name="stk_intent_permission">Dopusti STK korištenje</string>
 </resources>
