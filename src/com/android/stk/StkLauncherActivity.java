@@ -170,14 +170,19 @@ public class StkLauncherActivity extends ListActivity {
         for (int i = 0; i < simCount; i++) {
             //Check if the card is inserted.
             if (mTm.hasIccCard(i)) {
+                Menu mStkMenu = null;
                 if(appService == null || appService.getMainMenu(i) == null) {
                     CatLog.d(LOG_TAG, "SIM " + i + " main menu of STK in the card is null");
                     continue;
                 }
                 CatLog.d(LOG_TAG, "SIM " + i + " add to menu.");
                 mSingleSimId = i;
-                stkItemName = new StringBuilder(appName).append(" ")
+                mStkMenu = appService.getMainMenu(i);
+                stkItemName = mStkMenu.title;
+                if (stkItemName == null) {
+                    stkItemName = new StringBuilder(appName).append(" ")
                         .append(Integer.toString(i + 1)).toString();
+                }
                 Item item = new Item(i + 1, stkItemName, mBitMap);
                 item.id = i;
                 mStkMenuList.add(item);
