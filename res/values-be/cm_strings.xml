@@ -17,8 +17,8 @@
      limitations under the License.
 -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-  <string name="app_name2">SIM alati 2</string>
-  <string name="app_name3">SIM alati 3</string>
-  <string name="default_tone_dialog_msg">Ton produciranja</string>
-  <string name="stk_intent_permission">Dopusti STK korištenje</string>
+  <string name="app_name2">Меню SIM-карты 2</string>
+  <string name="app_name3">Меню SIM-карты 3</string>
+  <string name="default_tone_dialog_msg">Прайграванне гуку</string>
+  <string name="stk_intent_permission">Дазволіць узаемадзеянне з STK</string>
 </resources>
