@@ -88,12 +88,12 @@
         </activity>
         <activity android:name="StkDialogActivity"
             android:configChanges="orientation|locale|screenSize|keyboardHidden"
-            android:theme="@android:style/Theme.Material.Dialog"
+            android:theme="@android:style/Theme.DeviceDefault.Dialog"
             android:taskAffinity="android.task.stk.StkLauncherActivity">
         </activity>
 
         <activity android:name="ToneDialog"
-            android:theme="@android:style/Theme.Material.Dialog">
+            android:theme="@android:style/Theme.DeviceDefault.Dialog">
         </activity>
 
         <!-- SIM Toolkit settings activity -->
