@@ -1725,6 +1725,7 @@ public class StkAppService extends Service implements Runnable {
 
         Message msg = mServiceHandler.obtainMessage();
         msg.arg1 = OP_STOP_TONE;
+        msg.arg2 = slotId;
         msg.obj = (Integer)(showUserInfo ? 1 : 0);
         msg.what = STOP_TONE_WHAT;
         mServiceHandler.sendMessageDelayed(msg, timeout);
