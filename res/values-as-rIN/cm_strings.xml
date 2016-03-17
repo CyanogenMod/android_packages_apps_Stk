@@ -18,5 +18,7 @@
 -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
   <!-- Default message when no alpha tag in Play Tone -->
+  <string name="default_tone_dialog_msg">টোন প্লে কৰি আছে</string>
   <!-- Permission required for receiving intents from StkAppService-->
+  <string name="stk_intent_permission">STK ইণ্টেণ্টৰ অনুমতি দিয়ক</string>
 </resources>
