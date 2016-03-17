@@ -20,4 +20,5 @@
   <!-- Default message when no alpha tag in Play Tone -->
   <string name="default_tone_dialog_msg">Reproduciendo tono</string>
   <!-- Permission required for receiving intents from StkAppService-->
+  <string name="stk_intent_permission">Permitir intentos STK</string>
 </resources>
