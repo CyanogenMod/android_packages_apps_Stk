@@ -137,8 +137,7 @@ public class StkInputActivity extends Activity implements View.OnClickListener,
         CatLog.d(LOG_TAG, "onCreate - mIsResponseSent[" + mIsResponseSent + "]");
 
         // Set the layout for this activity.
-        // Disable the title for Window. We will set the title later in the layout.
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        requestWindowFeature(Window.FEATURE_ACTION_BAR);
         setContentView(R.layout.stk_input);
 
         // Initialize members
