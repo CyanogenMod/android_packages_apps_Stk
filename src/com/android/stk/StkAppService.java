@@ -994,7 +994,7 @@ public class StkAppService extends Service implements Runnable {
             launchEventMessage(slotId);
             // Idle mode text needs to be cleared for init or reset modes of refresh
             if (cmdMsg.isRefreshResetOrInit()) {
-                mNotificationManager.cancel(STK_NOTIFICATION_ID);
+                mNotificationManager.cancel(getNotificationId(slotId));
                 mStkContext[slotId].mIdleModeTextCmd = null;
                 CatLog.d(this, "Clean idle mode text due to refresh");
             }
