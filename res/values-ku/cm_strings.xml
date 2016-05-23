@@ -17,7 +17,11 @@
      limitations under the License.
 -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+  <!-- Application label used on home screen with an icon2 -->
   <string name="app_name2">ئامرازەکانی سیمکارت ٢</string>
+  <!-- Application label used on home screen with an icon3 -->
   <string name="app_name3">ئامرازەکانی سیمکارت ٣</string>
+  <!-- Default message when no alpha tag in Play Tone -->
   <string name="default_tone_dialog_msg">لێدانی زەنگ</string>
+  <!-- Permission required for receiving intents from StkAppService-->
 </resources>
