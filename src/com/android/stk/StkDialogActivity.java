@@ -140,8 +140,14 @@ public class StkDialogActivity extends Activity implements View.OnClickListener 
 
         setTitle(mTextMsg.title);
 
-        if (!(mTextMsg.iconSelfExplanatory && mTextMsg.icon != null)) {
-            mMessageView.setText(mTextMsg.text);
+        if (mTextMsg.icon != null) {
+            if (mTextMsg.iconSelfExplanatory) {
+                mMessageView.setText(mTextMsg.text);
+            }
+            mMessageView.setContentDescription(StkAppService.TEXT_ICON_FROM_COMMAND + ": "
+                + mTextMsg.text);
+        } else {
+            mMessageView.setContentDescription(StkAppService.TEXT_DEFAULT_ICON);
         }
 
         if (mTextMsg.icon == null) {

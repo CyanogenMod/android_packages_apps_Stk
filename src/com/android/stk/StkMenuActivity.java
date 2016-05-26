@@ -422,6 +422,7 @@ public class StkMenuActivity extends ListActivity implements View.OnCreateContex
             // Display title & title icon
             if (mStkMenu.titleIcon != null) {
                 mTitleIconView.setImageBitmap(mStkMenu.titleIcon);
+                mTitleIconView.setContentDescription(StkAppService.TEXT_ICON_FROM_COMMAND);
                 mTitleIconView.setVisibility(View.VISIBLE);
                 mTitleTextView.setVisibility(View.INVISIBLE);
                 if (!mStkMenu.titleIconSelfExplanatory) {
