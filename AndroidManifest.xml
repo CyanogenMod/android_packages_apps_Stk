@@ -34,8 +34,9 @@
 		android:process="com.android.phone">
 
 		<activity android:name="StkLauncherActivity"
+			android:excludeFromRecents="true"
 			android:label="@string/app_name"
-			android:theme="@android:style/Theme.Holo"
+			android:theme="@android:style/Theme.NoDisplay"
             android:taskAffinity="android.task.StkLauncherActivity"
 			android:enabled="false"	>
 			<intent-filter>
