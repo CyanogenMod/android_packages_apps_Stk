@@ -17,8 +17,12 @@
      limitations under the License.
 -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+  <!-- Application label used on home screen with an icon2 -->
   <string name="app_name2">Kit strumenti SIM 2</string>
+  <!-- Application label used on home screen with an icon3 -->
   <string name="app_name3">Kit strumenti SIM 3</string>
+  <!-- Default message when no alpha tag in Play Tone -->
   <string name="default_tone_dialog_msg">Riproduzione tono</string>
+  <!-- Permission required for receiving intents from StkAppService-->
   <string name="stk_intent_permission">Consentire gli intent STK</string>
 </resources>
