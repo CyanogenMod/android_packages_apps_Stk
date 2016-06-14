@@ -140,22 +140,19 @@ public class StkDialogActivity extends Activity implements View.OnClickListener 
 
         setTitle(mTextMsg.title);
 
-        if (mTextMsg.icon != null) {
-            if (mTextMsg.iconSelfExplanatory) {
-                mMessageView.setText(mTextMsg.text);
-            }
-            mMessageView.setContentDescription(StkAppService.TEXT_ICON_FROM_COMMAND + ": "
-                + mTextMsg.text);
-        } else {
-            mMessageView.setContentDescription(StkAppService.TEXT_DEFAULT_ICON);
+        if (!(mTextMsg.iconSelfExplanatory && mTextMsg.icon != null)) {
+            mMessageView.setText(mTextMsg.text);
         }
 
         if (mTextMsg.icon == null) {
             window.setFeatureDrawableResource(Window.FEATURE_LEFT_ICON,
                     com.android.internal.R.drawable.stat_notify_sim_toolkit);
+            mMessageView.setContentDescription(StkAppService.TEXT_DEFAULT_ICON);
         } else {
             window.setFeatureDrawable(Window.FEATURE_LEFT_ICON,
                     new BitmapDrawable(mTextMsg.icon));
+            mMessageView.setContentDescription(StkAppService.TEXT_ICON_FROM_COMMAND + ": "
+                + mTextMsg.text);
         }
 
         /*
