@@ -97,22 +97,6 @@ public class StkLauncherActivity extends ListActivity {
     }
 
     @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        CatLog.d(LOG_TAG, "mAcceptUsersInput: " + mAcceptUsersInput);
-        if (!mAcceptUsersInput) {
-            return true;
-        }
-        switch (keyCode) {
-            case KeyEvent.KEYCODE_BACK:
-                CatLog.d(LOG_TAG, "KEYCODE_BACK.");
-                mAcceptUsersInput = false;
-                finish();
-                return true;
-        }
-        return super.onKeyDown(keyCode, event);
-    }
-
-    @Override
     public void onResume() {
         super.onResume();
         CatLog.d(LOG_TAG, "onResume");
