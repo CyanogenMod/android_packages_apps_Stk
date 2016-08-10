@@ -30,6 +30,7 @@ import android.content.Context;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.os.SystemProperties;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
@@ -64,6 +65,10 @@ public class StkDialogActivity extends Activity implements View.OnClickListener 
     // buttons id
     public static final int OK_BUTTON = R.id.button_ok;
     public static final int CANCEL_BUTTON = R.id.button_cancel;
+
+    // system property to enable/disable adding content description
+    private static String ENABLE_CONTENT_DESCRIPTION = "persist.stk.enable_content";
+    private boolean mEnableContent = SystemProperties.getBoolean(ENABLE_CONTENT_DESCRIPTION, false);
 
     @Override
     protected void onCreate(Bundle icicle) {
@@ -147,12 +152,16 @@ public class StkDialogActivity extends Activity implements View.OnClickListener 
         if (mTextMsg.icon == null) {
             window.setFeatureDrawableResource(Window.FEATURE_LEFT_ICON,
                     com.android.internal.R.drawable.stat_notify_sim_toolkit);
-            mMessageView.setContentDescription(StkAppService.TEXT_DEFAULT_ICON);
+            if (mEnableContent) {
+                mMessageView.setContentDescription(StkAppService.TEXT_DEFAULT_ICON);
+            }
         } else {
             window.setFeatureDrawable(Window.FEATURE_LEFT_ICON,
                     new BitmapDrawable(mTextMsg.icon));
-            mMessageView.setContentDescription(StkAppService.TEXT_ICON_FROM_COMMAND + ": "
-                + mTextMsg.text);
+            if (mEnableContent) {
+                mMessageView.setContentDescription(StkAppService.TEXT_ICON_FROM_COMMAND + ": "
+                    + mTextMsg.text);
+            }
         }
 
         /*
