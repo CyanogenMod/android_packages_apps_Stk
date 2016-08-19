@@ -705,8 +705,12 @@ public class StkAppService extends Service implements Runnable {
     private boolean isScreenIdle() {
         ActivityManager mAcivityManager = (ActivityManager) mContext
                 .getSystemService(ACTIVITY_SERVICE);
-        String currentPackageName = mAcivityManager.getRunningTasks(1).get(0).topActivity
-                .getPackageName();
+        List<RunningTaskInfo> taskInfo = mAcivityManager.getRunningTasks(1);
+        if (taskInfo == null || taskInfo.isEmpty()) {
+            CatLog.e(this, "taskInfo is null");
+            return false;
+        }
+        String currentPackageName = taskInfo.get(0).topActivity.getPackageName();
         CatLog.d(this, "isScreenIdle, package name : " + currentPackageName);
         final Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
         mainIntent.addCategory(Intent.CATEGORY_HOME);
