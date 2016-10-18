@@ -944,8 +944,12 @@ public class StkAppService extends Service implements Runnable {
                 CatLog.d(LOG_TAG, "removeMenu() - Uninstall App");
                 mStkContext[slotId].mCurrentMenu = null;
                 mStkContext[slotId].mMainCmd = null;
+                boolean menuState = false;
                 //Check other setup menu state. If all setup menu are removed, uninstall apk.
                 for (i = PhoneConstants.SIM_ID_1; i < mSimCount; i++) {
+                    if (mStkContext[i].mSetupMenuState == STATE_EXIST) {
+                        menuState = true;
+                    }
                     if (i != slotId
                             && (mStkContext[slotId].mSetupMenuState == STATE_UNKNOWN
                             || mStkContext[slotId].mSetupMenuState == STATE_EXIST)) {
@@ -954,7 +958,7 @@ public class StkAppService extends Service implements Runnable {
                         break;
                     }
                 }
-                if (i == mSimCount) {
+                if (i == mSimCount && !menuState) {
                     StkAppInstaller.unInstall(mContext);
                 }
             } else {
